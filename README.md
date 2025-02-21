@@ -1,9 +1,8 @@
 # rainbow-text
-rainbow-text is a chrome extension to simulate or train grapheme synesthesia.
+rainbow-text is a chrome extension in order to simulate or train grapheme synesthesia.
 
 
 Next tasks:
-- Add icon
 - Tune default color selections.
 - Improve popup UI.
 - Add import and export for settings.
