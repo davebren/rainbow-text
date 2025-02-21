@@ -4,6 +4,11 @@
   "version": "0.1",
   "description": "Changes the color of each character (A-Z, 0-9) on a webpage.",
   "permissions": ["tabs", "activeTab", "scripting", "storage"],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
