@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Character Color Changer</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 10px;
+      font-family: Helvetica, sans-serif;
+    }
+    .color-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .color-picker label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .color-picker input[type="color"] {
+      width: 20px;
+      height: 20px;
+    }
+    button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+    }
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+    #dynamicStatus {
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+    #hardcoreModeButton {
+      margin-top: 10px;
+      font-size: 20px;
+      text-align: center;
+      font-family: 'Helvetica';
+    }
+  </style>
+</head>
+<body>
+  <h3>Character Color Changer</h3>
+  <div class="color-picker" id="colorPicker"></div>
+  <button id="enableButton">Enable for This Site</button>
+  <button id="disableButton">Disable for This Site</button>
+  <button id="applyButton">Apply Changes</button>
+  <button id="enableDynamicButton">Enable Dynamic Content</button>
+  <button id="disableDynamicButton">Disable Dynamic Content</button>
+  <button id="hardcoreModeButton">HARDCORE MODE</button>
+  <!-- <div id="hardcoreModeButton"></div> -->
+
+  <div id="status"></div>
+  <div id="dynamicStatus"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

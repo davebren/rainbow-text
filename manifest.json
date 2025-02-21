@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "rainbow-text",
+  "version": "0.1",
+  "description": "Changes the color of each character (A-Z, 0-9) on a webpage.",
+  "permissions": ["tabs", "activeTab", "scripting", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["service-worker.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "hello_extensions.png"
+  }
+}
