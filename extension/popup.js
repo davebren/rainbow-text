@@ -19,6 +19,7 @@ const applyButton = document.getElementById('applyButton');
 const enableDynamicButton = document.getElementById('enableDynamicButton');
 const disableDynamicButton = document.getElementById('disableDynamicButton');
 const hardcoreModeButton = document.getElementById('hardcoreModeButton');
+const resetButton = document.getElementById('resetButton'); // New reset button
 const statusDiv = document.getElementById('status');
 const dynamicStatusDiv = document.getElementById('dynamicStatus');
 
@@ -102,6 +103,36 @@ function setHardcoreModeText() {
       span.textContent = char;
     }
     hardcoreModeButton.appendChild(span);
+  });
+}
+
+function resetAll() {
+  // Clear stored settings
+  chrome.storage.sync.remove(['colorMap', 'enabledSites', 'dynamicEnabledSites'], () => {
+    // Reset variables to defaults
+    colorMap = { ...defaultColorMap };
+    enabledSites = [];
+    dynamicEnabledSites = [];
+
+    // Recreate color picker with default colors
+    colorPickerContainer.innerHTML = '';
+    characters.split('').forEach(char => {
+      const label = document.createElement('label');
+      label.textContent = char.toUpperCase();
+      const colorInput = document.createElement('input');
+      colorInput.type = 'color';
+      colorInput.value = colorMap[char] || '#000000';
+      colorInput.addEventListener('input', () => {
+        colorMap[char] = colorInput.value;
+        chrome.storage.sync.set({ colorMap });
+      });
+      label.appendChild(colorInput);
+      colorPickerContainer.appendChild(label);
+    });
+
+    // Update UI
+    updateUI();
+    statusDiv.textContent = 'All settings reset!';
   });
 }
 
@@ -191,4 +222,10 @@ hardcoreModeButton.addEventListener('click', () => {
       blockModeEnabled: true
     });
   });
+});
+
+resetButton.addEventListener('click', () => {
+  if (confirm('Are you sure you want to reset all settings? This will clear color overrides and site settings.')) {
+    resetAll();
+  }
 });
