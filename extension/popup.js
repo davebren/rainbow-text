@@ -1,7 +1,6 @@
 const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
 let colorMap = {};
 let isGameActive = false;
-
 {
 
   const defaultColorMap = {
@@ -30,10 +29,12 @@ let isGameActive = false;
   const importFileInput = document.getElementById('importFileInput');
   const startGameButton = document.getElementById('startGameButton');
   const startBlockGameButton = document.getElementById('startBlockGameButton');
+  const startStroopGameButton = document.getElementById('startStroopGameButton');
   const statusDiv = document.getElementById('status');
   const dynamicStatusDiv = document.getElementById('dynamicStatus');
   const gameContainer = document.getElementById('gameContainer');
   const blockGameContainer = document.getElementById('blockGameContainer');
+  const stroopGameContainer = document.getElementById('stroopGameContainer');
   const mainControls = document.getElementById('mainControls');
 
   let enabledSites = [];
@@ -75,7 +76,7 @@ let isGameActive = false;
   }
 
   function exportSettings() {
-    chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites', 'activeCharacters', 'charStats', 'streak', 'learnedWords', 'wordStats', 'wordStreak'], (data) => {
+    chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites', 'activeCharacters', 'charStats', 'streak', 'activeWords', 'wordStats', 'wordStreak'], (data) => {
       const settings = {
         colorMap: data.colorMap || colorMap,
         enabledSites: data.enabledSites || enabledSites,
@@ -83,7 +84,7 @@ let isGameActive = false;
         activeCharacters: data.activeCharacters || [],
         charStats: data.charStats || {},
         streak: data.streak || 0,
-        learnedWords: data.learnedWords || [],
+        activeWords: data.activeWords || [],
         wordStats: data.wordStats || {},
         wordStreak: data.wordStreak || 0
       };
@@ -117,7 +118,7 @@ let isGameActive = false;
           activeCharacters,
           charStats,
           streak,
-          learnedWords,
+          activeWords,
           wordStats,
           wordStreak
         } = settings;
@@ -133,7 +134,7 @@ let isGameActive = false;
           activeCharacters: Array.isArray(activeCharacters) ? activeCharacters : [],
           charStats: typeof charStats === 'object' ? charStats : {},
           streak: typeof streak === 'number' ? streak : 0,
-          learnedWords: Array.isArray(learnedWords) ? learnedWords : [],
+          activeWords: Array.isArray(activeWords) ? activeWords : [],
           wordStats: typeof wordStats === 'object' ? wordStats : {},
           wordStreak: typeof wordStreak === 'number' ? wordStreak : 0
         }, () => {
@@ -236,7 +237,7 @@ let isGameActive = false;
   }
 
   function resetAll() {
-    chrome.storage.sync.remove(['colorMap', 'enabledSites', 'dynamicEnabledSites', 'activeCharacters', 'charStats', 'streak', 'learnedWords', 'wordStats', 'wordStreak'], () => {
+    chrome.storage.sync.remove(['colorMap', 'enabledSites', 'dynamicEnabledSites', 'activeCharacters', 'charStats', 'streak', 'activeWords', 'wordStats', 'wordStreak'], () => {
       colorMap = { ...defaultColorMap };
       enabledSites = [];
       dynamicEnabledSites = [];
@@ -362,6 +363,7 @@ let isGameActive = false;
     mainControls.style.display = 'none';
     gameContainer.style.display = 'block';
     blockGameContainer.style.display = 'none';
+    stroopGameContainer.style.display = 'none';
     isGameActive = true;
     updateTitleColors();
   });
@@ -370,8 +372,17 @@ let isGameActive = false;
     mainControls.style.display = 'none';
     gameContainer.style.display = 'none';
     blockGameContainer.style.display = 'block';
+    stroopGameContainer.style.display = 'none';
     isGameActive = true;
     updateTitleColors();
   });
 
+  startStroopGameButton.addEventListener('click', () => {
+    mainControls.style.display = 'none';
+    gameContainer.style.display = 'none';
+    blockGameContainer.style.display = 'none';
+    stroopGameContainer.style.display = 'block';
+    isGameActive = true;
+    updateTitleColors();
+  });
 }

@@ -98,7 +98,7 @@
       font-family: 'Helvetica';
       background-color: #444;
     }
-    #gameContainer, #blockGameContainer {
+    #gameContainer, #blockGameContainer, #stroopGameContainer {
       display: none;
       text-align: center;
       overflow: hidden;
@@ -168,61 +168,84 @@
   </style>
 </head>
 <body>
-  <div class="title-container">
-    <div id="title"></div>
-    <div id="status"></div>
-  </div>
-  
-  <div id="mainControls">
-    <button id="enableButton">Enable for This Site</button>
-    <button id="disableButton">Disable for This Site</button>
-    <button id="enableDynamicButton">Enable Dynamic Content</button>
-    <button id="disableDynamicButton">Disable Dynamic Content</button>
-    <div class="color-picker" id="colorPicker"></div>
-    <button id="applyButton">Apply Changes</button>
-    <button id="startGameButton">Start Flashcard Game</button>
-    <button id="startBlockGameButton">Start Block Word Game</button>
-    <button id="resetButton">Reset All</button>
-    <button id="exportButton">Export Settings</button>
-    <button id="importButton">Import Settings</button>
-    <button id="hardcoreModeButton">HARDCORE MODE</button>
+<div class="title-container">
+  <div id="title"></div>
+  <div id="status"></div>
+</div>
 
-    <input type="file" id="importFileInput" accept=".json">
-    <div id="dynamicStatus"></div>
-  </div>
+<div id="mainControls">
+  <button id="enableButton">Enable for This Site</button>
+  <button id="disableButton">Disable for This Site</button>
+  <button id="enableDynamicButton">Enable Dynamic Content</button>
+  <button id="disableDynamicButton">Disable Dynamic Content</button>
+  <div class="color-picker" id="colorPicker"></div>
+  <button id="applyButton">Apply Changes</button>
+  <button id="startGameButton">Start Flashcard Game</button>
+  <button id="startBlockGameButton">Start Block Word Game</button>
+  <button id="startStroopGameButton">Start Stroop Game</button>
+  <button id="resetButton">Reset All</button>
+  <button id="exportButton">Export Settings</button>
+  <button id="importButton">Import Settings</button>
+  <button id="hardcoreModeButton">HARDCORE MODE</button>
+  <input type="file" id="importFileInput" accept=".json">
+  <div id="dynamicStatus"></div>
+</div>
 
-  <div id="gameContainer">
-    <h3>Flashcard Game</h3>
-    <div id="promptContainer">
-      <div id="gameCharacter" class="hidden"></div>
-      <div id="gameColor" class="hidden"></div>
+<div id="gameContainer">
+  <h3>Flashcard Game</h3>
+  <div id="promptContainer">
+    <div id="gameCharacter" class="hidden"></div>
+    <div id="gameColor" class="hidden"></div>
+  </div>
+  <div id="gameOptions"></div>
+  <div id="gameFeedback"></div>
+  <div id="gameScore"></div>
+  <div id="gameControls">
+    <button id="nextCardButton" class="invisible">Next</button>
+    <button id="toggleModeButton">Switch Mode</button>
+    <button id="exitGameButton">Exit Game</button>
+  </div>
+</div>
+
+<div id="blockGameContainer">
+  <h3>Block Word Game</h3>
+  <div id="blockPromptContainer">
+    <div id="blockGameCharacter" class="hidden"></div>
+  </div>
+  <div id="blockGameOptions"></div>
+  <div id="blockGameFeedback"></div>
+  <div id="blockGameScore"></div>
+  <div id="blockGameControls">
+    <button id="blockNextCardButton" class="invisible">Next</button>
+    <button id="blockExitGameButton">Exit Game</button>
+  </div>
+</div>
+
+<div id="stroopGameContainer">
+  <h3>Stroop Game</h3>
+  <div id="stroopPromptContainer">
+    <div id="stroopGameWord" class="hidden"></div>
+  </div>
+  <div id="stroopGameOptions" class="stroop-choice-container">
+    <div class="stroop-choice">
+      <label>No</label>
+      <button id="stroopNoButton">&#x2190</button>
     </div>
-    <div id="gameOptions"></div>
-    <div id="gameFeedback"></div>
-    <div id="gameScore"></div>
-    <div id="gameControls">
-      <button id="nextCardButton" class="invisible">Next</button>
-      <button id="toggleModeButton">Switch Mode</button>
-      <button id="exitGameButton">Exit Game</button>
+    <div class="stroop-choice">
+      <label>Yes</label>
+      <button id="stroopYesButton">&#x2192</button>
     </div>
   </div>
-
-  <div id="blockGameContainer">
-    <h3>Block Word Game</h3>
-    <div id="blockPromptContainer">
-      <div id="blockGameCharacter" class="hidden"></div>
-    </div>
-    <div id="blockGameOptions"></div>
-    <div id="blockGameFeedback"></div>
-    <div id="blockGameScore"></div>
-    <div id="blockGameControls">
-      <button id="blockNextCardButton" class="invisible">Next</button>
-      <button id="blockExitGameButton">Exit Game</button>
-    </div>
+  <div id="stroopGameFeedback"></div>
+  <div id="stroopGameScore"></div>
+  <div id="stroopGameControls">
+    <button id="stroopExitGameButton">Exit Game</button>
   </div>
+</div>
 
-  <script src="popup.js"></script>
-  <script src="charColorGame.js"></script>
-  <script src="blockGame.js"></script>
+<script src="popup.js"></script>
+<script src="charColorGame.js"></script>
+<script src="blockGame.js"></script>
+<script src="stroopGame.js"></script>
 </body>
 </html>
