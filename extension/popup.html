@@ -16,13 +16,16 @@
       align-items: center;
       margin-bottom: 10px;
     }
-    h3, h4 {
-      color: #FFF;
+    #title {
+      font-size: 24px; /* Match h3 size */
+      font-weight: bold;
       margin: 0;
+      color: #FFF; /* Fallback color */
     }
     h4 {
+      color: #FFF;
       font-size: 16px;
-      margin-top: 5px; /* Reduced from 15px */
+      margin-top: 5px;
     }
     .color-picker {
       display: flex;
@@ -72,8 +75,8 @@
     }
     #status {
       color: #BBB;
-      font-size: 14px; /* Slightly smaller to fit beside title */
-      margin: 0; /* Remove vertical margin */
+      font-size: 14px;
+      margin: 0;
     }
     #dynamicStatus {
       color: #BBB;
@@ -156,7 +159,7 @@
 </head>
 <body>
   <div class="title-container">
-    <h3>rainbow-text</h3>
+    <div id="title"></div>
     <div id="status"></div>
   </div>
   

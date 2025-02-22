@@ -12,6 +12,7 @@ const defaultColorMap = {
 };
 
 // DOM Elements
+const titleContainer = document.getElementById('title');
 const colorPickerContainer = document.getElementById('colorPicker');
 const enableButton = document.getElementById('enableButton');
 const disableButton = document.getElementById('disableButton');
@@ -43,11 +44,23 @@ function createColorPickerSection(title, chars) {
     colorInput.addEventListener('input', () => {
       colorMap[char] = colorInput.value;
       chrome.storage.sync.set({ colorMap });
+      updateTitleColors(); // Update title on color change
     });
     label.appendChild(colorInput);
     group.appendChild(label);
   });
   colorPickerContainer.appendChild(group);
+}
+
+function updateTitleColors() {
+  titleContainer.innerHTML = '';
+  const titleText = 'rainbow-text';
+  titleText.split('').forEach(char => {
+    const span = document.createElement('span');
+    span.textContent = char;
+    span.style.color = colorMap[char.toLowerCase()] || '#FFF'; // Use colorMap or white for hyphen
+    titleContainer.appendChild(span);
+  });
 }
 
 // Load saved data and initialize UI
@@ -65,6 +78,7 @@ chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites'], (da
   createColorPickerSection('Consonants', consonants);
   createColorPickerSection('Numerals', numerals);
 
+  updateTitleColors();
   updateUI();
 });
 
@@ -139,12 +153,12 @@ function resetAll() {
     createColorPickerSection('Consonants', consonants);
     createColorPickerSection('Numerals', numerals);
 
+    updateTitleColors();
     updateUI();
     statusDiv.textContent = 'All settings reset!';
   });
 }
 
-// Event listeners
 enableButton.addEventListener('click', () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = new URL(tabs[0].url);
@@ -185,6 +199,7 @@ applyButton.addEventListener('click', () => {
       });
     }
   });
+  updateTitleColors();
 });
 
 enableDynamicButton.addEventListener('click', () => {
