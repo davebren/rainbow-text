@@ -9,6 +9,7 @@
     const feedbackText = document.getElementById('stroopGameFeedback');
     const scoreText = document.getElementById('stroopGameScore');
     const exitGameButton = document.getElementById('stroopExitGameButton');
+    const stroopTitle = container.querySelector('h3'); // Target the "Stroop Game" title
 
     // Stroop Game state
     let correctAnswers = 0;
@@ -139,11 +140,11 @@
         });
     }
 
-    function flashBackground(isCorrect) {
-        const originalColor = container.style.backgroundColor || '#333';
-        container.style.backgroundColor = isCorrect ? '#00FF00' : '#FF3333';
+    function flashFeedback(isCorrect) {
+        const originalColor = stroopTitle.style.backgroundColor || 'transparent';
+        stroopTitle.style.backgroundColor = isCorrect ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 51, 51, 0.5)';
         setTimeout(() => {
-            container.style.backgroundColor = originalColor;
+            stroopTitle.style.backgroundColor = originalColor;
         }, 200); // Flash for 200ms
     }
 
@@ -151,10 +152,10 @@
         const isCorrect = (userSaysMatching === isMatching);
         if (isCorrect) {
             correctAnswers++;
-            flashBackground(true);
+            flashFeedback(true);
         } else {
             incorrectAnswers++;
-            flashBackground(false);
+            flashFeedback(false);
             showCorrectColors();
         }
         updateScoreDisplay();
@@ -162,7 +163,7 @@
     }
 
     function updateScoreDisplay() {
-        const score = correctAnswers - incorrectAnswers;
-        scoreText.textContent = `Score: ${score} | Time: ${timeLeft}s`;
+        const score = (correctAnswers - incorrectAnswers) * activeBlockGameWords.length;
+        scoreText.innerHTML = `Score: ${score}<br>${timeLeft}`;
     }
 }

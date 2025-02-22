@@ -165,7 +165,6 @@
     #importFileInput {
       display: none;
     }
-
     .stroop-choice-container {
       display: flex;
       justify-content: space-between;
@@ -176,6 +175,10 @@
       flex-direction: column;
       align-items: center;
       width: 45%;
+    }
+    .stroop-unlock-prompt {
+      margin-top: 10px; /* Ensure margin is applied */
+      display: block; /* Ensure the label behaves as a block element for margin to work */
     }
   </style>
 </head>
@@ -235,6 +238,7 @@
 
 <div id="stroopGameContainer">
   <h3>Stroop Game</h3>
+  <div id="stroopGameScore"></div>
   <div id="stroopPromptContainer">
     <div id="stroopGameWord" class="hidden"></div>
   </div>
@@ -249,9 +253,11 @@
     </div>
   </div>
   <div id="stroopGameFeedback"></div>
-  <div id="stroopGameScore"></div>
   <div id="stroopGameControls">
     <button id="stroopExitGameButton">Exit Game</button>
+    <label class="stroop-unlock-prompt">
+      Unlock more words in the block game to increase your score multiplier.
+    </label>
   </div>
 </div>
 
