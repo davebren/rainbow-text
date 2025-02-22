@@ -10,13 +10,19 @@
       background-color: #333;
       color: #DDD;
     }
+    .title-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
     h3, h4 {
       color: #FFF;
-      margin: 0 0 10px 0;
+      margin: 0;
     }
     h4 {
       font-size: 16px;
-      margin-top: 15px;
+      margin-top: 5px; /* Reduced from 15px */
     }
     .color-picker {
       display: flex;
@@ -26,20 +32,20 @@
     .color-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px; /* Reduced gap to fit 5 items */
+      gap: 5px;
       justify-content: space-between;
     }
     .color-picker label {
       display: flex;
-      flex-direction: column; /* Stack label and input vertically */
+      flex-direction: column;
       align-items: center;
       color: #FFF;
-      width: 55px; /* Fixed width to fit 5 in 300px (300 / 5 = 60px - gap) */
+      width: 55px;
     }
     .color-picker input[type="color"] {
       width: 30px;
       height: 30px;
-      border: none; /* Remove gray border */
+      border: none;
       padding: 0;
       background: none;
       cursor: pointer;
@@ -64,7 +70,12 @@
       text-align: center;
       min-height: 20px;
     }
-    #status, #dynamicStatus {
+    #status {
+      color: #BBB;
+      font-size: 14px; /* Slightly smaller to fit beside title */
+      margin: 0; /* Remove vertical margin */
+    }
+    #dynamicStatus {
       color: #BBB;
     }
     #gameFeedback {
@@ -144,19 +155,21 @@
   </style>
 </head>
 <body>
-  <h3>rainbow-text</h3>
+  <div class="title-container">
+    <h3>rainbow-text</h3>
+    <div id="status"></div>
+  </div>
   
   <div id="mainControls">
-    <div class="color-picker" id="colorPicker"></div>
     <button id="enableButton">Enable for This Site</button>
     <button id="disableButton">Disable for This Site</button>
-    <button id="applyButton">Apply Changes</button>
     <button id="enableDynamicButton">Enable Dynamic Content</button>
     <button id="disableDynamicButton">Disable Dynamic Content</button>
+    <div class="color-picker" id="colorPicker"></div>
+    <button id="applyButton">Apply Changes</button>
     <button id="hardcoreModeButton">HARDCORE MODE</button>
     <button id="startGameButton">Start Flashcard Game</button>
     <button id="resetButton">Reset All</button>
-    <div id="status"></div>
     <div id="dynamicStatus"></div>
   </div>
 
