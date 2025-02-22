@@ -17,15 +17,18 @@
       margin-bottom: 10px;
     }
     #title {
-      font-size: 24px; /* Match h3 size */
+      font-size: 24px;
       font-weight: bold;
       margin: 0;
-      color: #FFF; /* Fallback color */
+      color: #FFF;
     }
     h4 {
       color: #FFF;
       font-size: 16px;
-      margin-top: 5px;
+      margin: 0; /* Remove all margins by default */
+    }
+    h4:first-child {
+      margin-top: 10px; /* Add margin above "Vowels" only */
     }
     .color-picker {
       display: flex;
@@ -44,6 +47,7 @@
       align-items: center;
       color: #FFF;
       width: 55px;
+      margin-bottom: 0;
     }
     .color-picker input[type="color"] {
       width: 30px;
@@ -63,6 +67,9 @@
       border: 1px solid #777;
       cursor: pointer;
       box-sizing: border-box;
+    }
+    #enableButton {
+      margin-bottom: 10px; /* Kept from previous change */
     }
     button:hover {
       background-color: #666;
