@@ -10,36 +10,50 @@
       background-color: #333;
       color: #DDD;
     }
-    h3 {
+    h3, h4 {
       color: #FFF;
       margin: 0 0 10px 0;
     }
+    h4 {
+      font-size: 16px;
+      margin-top: 15px;
+    }
     .color-picker {
       display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .color-group {
+      display: flex;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: 5px; /* Reduced gap to fit 5 items */
+      justify-content: space-between;
     }
     .color-picker label {
       display: flex;
+      flex-direction: column; /* Stack label and input vertically */
       align-items: center;
-      gap: 5px;
       color: #FFF;
+      width: 55px; /* Fixed width to fit 5 in 300px (300 / 5 = 60px - gap) */
     }
     .color-picker input[type="color"] {
-      width: 20px;
-      height: 20px;
-      border: 1px solid #666;
+      width: 30px;
+      height: 30px;
+      border: none; /* Remove gray border */
+      padding: 0;
+      background: none;
+      cursor: pointer;
     }
     button {
       margin-top: 10px;
       width: 100%;
-      min-height: 40px; /* Fixed height for consistency */
+      min-height: 40px;
       padding: 10px;
       background-color: #555;
       color: #FFF;
       border: 1px solid #777;
       cursor: pointer;
-      box-sizing: border-box; /* Include padding/border in height */
+      box-sizing: border-box;
     }
     button:hover {
       background-color: #666;
@@ -48,7 +62,7 @@
       margin-top: 10px;
       font-weight: bold;
       text-align: center;
-      min-height: 20px; /* Fixed height for feedback */
+      min-height: 20px;
     }
     #status, #dynamicStatus {
       color: #BBB;
@@ -66,10 +80,10 @@
     #gameContainer {
       display: none;
       text-align: center;
-      overflow: hidden; /* Prevent overflow */
+      overflow: hidden;
     }
     #promptContainer {
-      height: 60px; /* Fixed space for prompt (character or color) */
+      height: 60px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -90,7 +104,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 5px;
-      min-height: 80px; /* Fixed height for 2 rows of buttons */
+      min-height: 80px;
       margin-top: 10px;
     }
     #gameOptions button {
@@ -99,21 +113,21 @@
       background-color: #555;
       color: #FFF;
       border: 1px solid #777;
-      min-height: 30px; /* Fixed height */
+      min-height: 30px;
       box-sizing: border-box;
     }
     #gameOptions button:hover {
       background-color: #666;
     }
     #gameOptions button:disabled {
-      background-color: #444; /* Dimmed when disabled */
+      background-color: #444;
       cursor: not-allowed;
     }
     #gameScore {
       margin-top: 10px;
       font-size: 14px;
       color: #BBB;
-      min-height: 20px; /* Fixed height */
+      min-height: 20px;
     }
     #gameControls {
       margin-top: 10px;

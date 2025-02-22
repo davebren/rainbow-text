@@ -19,7 +19,7 @@ const applyButton = document.getElementById('applyButton');
 const enableDynamicButton = document.getElementById('enableDynamicButton');
 const disableDynamicButton = document.getElementById('disableDynamicButton');
 const hardcoreModeButton = document.getElementById('hardcoreModeButton');
-const resetButton = document.getElementById('resetButton'); // New reset button
+const resetButton = document.getElementById('resetButton');
 const statusDiv = document.getElementById('status');
 const dynamicStatusDiv = document.getElementById('dynamicStatus');
 
@@ -27,13 +27,14 @@ let colorMap = {};
 let enabledSites = [];
 let dynamicEnabledSites = [];
 
-// Load saved data and initialize UI
-chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites'], (data) => {
-  colorMap = { ...defaultColorMap, ...data.colorMap };
-  enabledSites = data.enabledSites || [];
-  dynamicEnabledSites = data.dynamicEnabledSites || [];
+function createColorPickerSection(title, chars) {
+  const header = document.createElement('h4');
+  header.textContent = title;
+  colorPickerContainer.appendChild(header);
 
-  characters.split('').forEach(char => {
+  const group = document.createElement('div');
+  group.className = 'color-group';
+  chars.forEach(char => {
     const label = document.createElement('label');
     label.textContent = char.toUpperCase();
     const colorInput = document.createElement('input');
@@ -44,8 +45,25 @@ chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites'], (da
       chrome.storage.sync.set({ colorMap });
     });
     label.appendChild(colorInput);
-    colorPickerContainer.appendChild(label);
+    group.appendChild(label);
   });
+  colorPickerContainer.appendChild(group);
+}
+
+// Load saved data and initialize UI
+chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites'], (data) => {
+  colorMap = { ...defaultColorMap, ...data.colorMap };
+  enabledSites = data.enabledSites || [];
+  dynamicEnabledSites = data.dynamicEnabledSites || [];
+
+  colorPickerContainer.innerHTML = '';
+  const vowels = ['a', 'e', 'i', 'o', 'u'];
+  const consonants = 'bcdfghjklmnpqrstvwxyz'.split('');
+  const numerals = '0123456789'.split('');
+
+  createColorPickerSection('Vowels', vowels);
+  createColorPickerSection('Consonants', consonants);
+  createColorPickerSection('Numerals', numerals);
 
   updateUI();
 });
@@ -107,30 +125,20 @@ function setHardcoreModeText() {
 }
 
 function resetAll() {
-  // Clear stored settings
   chrome.storage.sync.remove(['colorMap', 'enabledSites', 'dynamicEnabledSites'], () => {
-    // Reset variables to defaults
     colorMap = { ...defaultColorMap };
     enabledSites = [];
     dynamicEnabledSites = [];
 
-    // Recreate color picker with default colors
     colorPickerContainer.innerHTML = '';
-    characters.split('').forEach(char => {
-      const label = document.createElement('label');
-      label.textContent = char.toUpperCase();
-      const colorInput = document.createElement('input');
-      colorInput.type = 'color';
-      colorInput.value = colorMap[char] || '#000000';
-      colorInput.addEventListener('input', () => {
-        colorMap[char] = colorInput.value;
-        chrome.storage.sync.set({ colorMap });
-      });
-      label.appendChild(colorInput);
-      colorPickerContainer.appendChild(label);
-    });
+    const vowels = ['a', 'e', 'i', 'o', 'u'];
+    const consonants = 'bcdfghjklmnpqrstvwxyz'.split('');
+    const numerals = '0123456789'.split('');
 
-    // Update UI
+    createColorPickerSection('Vowels', vowels);
+    createColorPickerSection('Consonants', consonants);
+    createColorPickerSection('Numerals', numerals);
+
     updateUI();
     statusDiv.textContent = 'All settings reset!';
   });
