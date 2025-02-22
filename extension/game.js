@@ -121,7 +121,7 @@ function generateCharOptions() {
   const correctChar = currentChar;
   let options = [correctChar];
   while (options.length < 4) {
-    const randomChar = characters[Math.floor(Math.random() * characters.length)];
+    const randomChar = activeCharacters[Math.floor(Math.random() * activeCharacters.length)];
     if (!options.includes(randomChar) && randomChar !== correctChar) {
       options.push(randomChar);
     }
