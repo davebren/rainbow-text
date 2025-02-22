@@ -65,6 +65,7 @@ function nextCard() {
 
   if (isCharToColorMode) {
     gameCharacter.textContent = currentChar.toUpperCase();
+    gameCharacter.style.color = '#FFF'; // Reset to white initially
     gameCharacter.classList.remove('hidden');
     gameColor.classList.add('hidden');
     generateColorOptions();
@@ -87,7 +88,7 @@ function biasedRandomChar(previousChar) {
       const lastUnlockedChars = activeCharacters.slice(-3);
       char = lastUnlockedChars[Math.floor(Math.random() * lastUnlockedChars.length)];
     } else {
-      const restOfChars = activeCharacters.slice(activeCharacters.length - 3);
+      const restOfChars = activeCharacters.slice(0, activeCharacters.length - 3);
       char = restOfChars[Math.floor(Math.random() * restOfChars.length)];
     }
   }
@@ -153,6 +154,16 @@ function checkAnswer(selected, correct, isColorMode) {
       : `Wrong! The correct character is ${correct.toUpperCase()}.`;
     gameFeedback.style.color = '#FF3333';
   }
+
+  if (isCharToColorMode) {
+    gameCharacter.style.color = colorMap[currentChar];
+  } else {
+    gameColor.classList.add('hidden');
+    gameCharacter.textContent = currentChar.toUpperCase();
+    gameCharacter.style.color = colorMap[currentChar];
+    gameCharacter.classList.remove('hidden');
+  }
+
   saveProgress();
   updateScoreDisplay();
   checkProgression();
@@ -175,7 +186,7 @@ function checkProgression() {
       if (remainingChars.length > 0) {
         const newChar = remainingChars[0];
         activeCharacters.push(newChar);
-        gameFeedback.textContent = `Great job! Added '${newChar.toUpperCase()}' to your learning set.`;
+        gameFeedback.textContent = `Great job! Added '${newChar.toUpperCase()}' to your set.`;
         score.correct = 0;
         score.total = 0;
         saveProgress();
