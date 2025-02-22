@@ -19,7 +19,7 @@
     let timeLeft = 30;
 
     startGameButton.addEventListener('click', () => {
-        startGame()
+        startGame();
     });
 
     function saveProgress() {
@@ -33,6 +33,15 @@
         updateScoreDisplay();
         startTimer();
         nextWord();
+
+        // Add keyboard event listeners
+        document.addEventListener('keydown', handleKeyPress);
+        // Ensure buttons are enabled
+        noButton.disabled = false;
+        yesButton.disabled = false;
+        // Hide New Game button if it exists
+        const newGameButton = document.getElementById('stroopNewGameButton');
+        if (newGameButton) newGameButton.style.display = 'none';
     }
 
     function startTimer() {
@@ -50,6 +59,18 @@
         feedbackText.textContent = `Game Over! Final Score: ${correctAnswers - incorrectAnswers}`;
         noButton.disabled = true;
         yesButton.disabled = true;
+        document.removeEventListener('keydown', handleKeyPress);
+
+        // Create and show New Game button
+        let newGameButton = document.getElementById('stroopNewGameButton');
+        if (!newGameButton) {
+            newGameButton = document.createElement('button');
+            newGameButton.id = 'stroopNewGameButton';
+            newGameButton.textContent = 'New Game';
+            newGameButton.addEventListener('click', startGame);
+            exitGameButton.parentNode.insertBefore(newGameButton, exitGameButton);
+        }
+        newGameButton.style.display = 'block';
     }
 
     exitGameButton.addEventListener('click', () => {
@@ -59,10 +80,19 @@
         mainControls.style.display = 'block';
         isGameActive = false;
         updateTitleColors();
+        document.removeEventListener('keydown', handleKeyPress);
     });
 
     noButton.addEventListener('click', () => checkAnswer(false));
     yesButton.addEventListener('click', () => checkAnswer(true));
+
+    function handleKeyPress(event) {
+        if (event.key === 'ArrowLeft') {
+            checkAnswer(false);
+        } else if (event.key === 'ArrowRight') {
+            checkAnswer(true);
+        }
+    }
 
     function nextWord() {
         currentWord = selectNextWord();
