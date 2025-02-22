@@ -117,7 +117,6 @@ function generateCharOptions() {
   options.forEach(char => {
     const button = document.createElement('button');
     button.textContent = char.toUpperCase();
-    button.style.color = '#000000';
     button.addEventListener('click', () => checkAnswer(char, correctChar, false));
     gameOptions.appendChild(button);
   });
@@ -138,12 +137,12 @@ function checkAnswer(selected, correct, isColorMode) {
     score.correct++;
     charStats[currentChar].correct++;
     gameFeedback.textContent = 'Correct!';
-    gameFeedback.style.color = 'green';
+    gameFeedback.style.color = '#00FF00';
   } else {
     gameFeedback.textContent = isColorMode
       ? `Wrong! The correct color is ${correct}.`
       : `Wrong! The correct character is ${correct.toUpperCase()}.`;
-    gameFeedback.style.color = 'red';
+    gameFeedback.style.color = '#FF3333';
   }
   saveProgress();
   updateScoreDisplay();

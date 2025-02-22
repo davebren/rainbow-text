@@ -3,7 +3,6 @@ rainbow-text is a chrome extension in order to simulate or train grapheme synest
 
 
 Next tasks:
-- Tune default color selections.
 - Improve popup UI.
 - Add import and export for settings.
 - Add defaults for common symbol characters.

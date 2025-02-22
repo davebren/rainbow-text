@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Character Color Changer</title>
+  <title>rainbow-text</title>
   <style>
     body {
       width: 300px;
       padding: 10px;
       font-family: Helvetica, sans-serif;
+      background-color: #333; /* Dark gray background */
+      color: #DDD; /* Light gray text */
+    }
+    h3 {
+      color: #FFF; /* White for headings */
     }
     .color-picker {
       display: flex;
@@ -17,26 +22,42 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      color: #FFF; /* White labels for characters */
     }
     .color-picker input[type="color"] {
       width: 20px;
       height: 20px;
+      border: 1px solid #666; /* Light border for visibility */
     }
     button {
       margin-top: 10px;
       width: 100%;
       padding: 10px;
+      background-color: #555; /* Darker button background */
+      color: #FFF; /* White text */
+      border: 1px solid #777; /* Light gray border */
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #666; /* Slightly lighter on hover */
     }
     #status, #dynamicStatus, #gameFeedback {
       margin-top: 10px;
       font-weight: bold;
       text-align: center;
     }
+    #status, #dynamicStatus {
+      color: #BBB; /* Slightly dimmed status text */
+    }
+    #gameFeedback {
+      color: #FFF; /* Default white, overridden by JS for green/red */
+    }
     #hardcoreModeButton {
       margin-top: 10px;
       font-size: 20px;
       text-align: center;
       font-family: 'Helvetica';
+      background-color: #444; /* Slightly different button shade */
     }
     #gameContainer {
       display: none;
@@ -45,12 +66,13 @@
     #gameCharacter {
       font-size: 48px;
       margin: 10px 0;
+      color: #FFF; /* White for large character */
     }
     #gameColor {
       width: 50px;
       height: 50px;
       margin: 10px auto;
-      border: 1px solid #000;
+      border: 1px solid #999; /* Lighter border for dark theme */
     }
     #gameOptions {
       display: flex;
@@ -61,10 +83,17 @@
     #gameOptions button {
       width: 45%;
       padding: 5px;
+      background-color: #555; /* Match main buttons */
+      color: #FFF; /* White text (overrides JS black for dark theme) */
+      border: 1px solid #777;
+    }
+    #gameOptions button:hover {
+      background-color: #666;
     }
     #gameScore {
       margin-top: 10px;
       font-size: 14px;
+      color: #BBB; /* Dimmed score text */
     }
     .hidden {
       display: none;
@@ -72,7 +101,7 @@
   </style>
 </head>
 <body>
-  <h3>Character Color Changer</h3>
+  <h3>rainbow-text</h3>
   
   <div id="mainControls">
     <div class="color-picker" id="colorPicker"></div>
@@ -101,6 +130,5 @@
 
   <script src="popup.js"></script>
   <script src="game.js"></script>
-
 </body>
 </html>
