@@ -7,3 +7,5 @@ Next tasks:
 - Use a taller block glyph for the hardcore mode capital letters.
 - If working well enough across all sites, add an option to turn it on for all sites with blacklisting.
 - Tune study game.
+- Add game for training in hardcore mode.
+	- Practice common words in order from a frequency list.
