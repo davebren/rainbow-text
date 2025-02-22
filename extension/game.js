@@ -11,17 +11,17 @@ const exitGameButton = document.getElementById('exitGameButton');
 const mainControls = document.getElementById('mainControls');
 const startGameButton = document.getElementById('startGameButton');
 
-// Game state (initialized from popup.js globals)
+// Game state.
 let activeCharacters = [];
 let charStats = {};
 let currentChar = '';
 let isCharToColorMode = true;
 let streak = 0;
 
-// Load game state from storage
-chrome.storage.sync.get(['activeCharacters', 'charStats'], (data) => {
+chrome.storage.sync.get(['activeCharacters', 'charStats', 'streak'], (data) => {
   activeCharacters = data.activeCharacters || characters.split('').slice(0, 5);
   charStats = data.charStats || {};
+  streak = data.streak || 0;
 
   // Initialize charStats for any missing characters
   characters.split('').forEach(char => {
@@ -29,9 +29,8 @@ chrome.storage.sync.get(['activeCharacters', 'charStats'], (data) => {
   });
 });
 
-// Save game progress
 function saveProgress() {
-  chrome.storage.sync.set({ activeCharacters, charStats });
+  chrome.storage.sync.set({ activeCharacters, charStats, streak });
 }
 
 // Game event listeners
@@ -58,9 +57,8 @@ nextCardButton.addEventListener('click', nextCard);
 
 function nextCard() {
   currentChar = biasedRandomChar(currentChar);
-  gameOptions.innerHTML = '';
   gameFeedback.textContent = '';
-  nextCardButton.classList.add('hidden');
+  nextCardButton.classList.add('invisible');
 
   if (isCharToColorMode) {
     gameCharacter.textContent = currentChar.toUpperCase();
@@ -95,6 +93,7 @@ function biasedRandomChar(previousChar) {
 }
 
 function generateColorOptions() {
+  gameOptions.innerHTML = '';
   const correctColor = colorMap[currentChar];
   const allColors = Object.values(colorMap);
   let options = [correctColor];
@@ -114,10 +113,11 @@ function generateColorOptions() {
 }
 
 function generateCharOptions() {
+  gameOptions.innerHTML = '';
   const correctChar = currentChar;
   let options = [correctChar];
   while (options.length < 4) {
-    const randomChar = activeCharacters[Math.floor(Math.random() * activeCharacters.length)];
+    const randomChar = characters[Math.floor(Math.random() * characters.length)];
     if (!options.includes(randomChar) && randomChar !== correctChar) {
       options.push(randomChar);
     }
@@ -164,28 +164,33 @@ function checkAnswer(selected, correct, isColorMode) {
     gameCharacter.classList.remove('hidden');
   }
 
+  Array.from(gameOptions.children).forEach(button => {
+    button.disabled = true;
+  });
+
   saveProgress();
   updateScoreDisplay();
   checkProgression();
-  nextCardButton.classList.remove('hidden');
-  gameOptions.innerHTML = '';
+  nextCardButton.classList.remove('invisible');
 }
 
 function updateScoreDisplay() {
-  const streakNeeded = 15 + Math.floor(Math.sqrt(activeCharacters.length))
+  const streakNeeded = 13 + Math.floor(Math.sqrt(activeCharacters.length));
   gameScore.textContent = `Streak: ${streak} | Learning ${activeCharacters.length}/${characters.length} | ${streakNeeded} streak needed`;
 }
 
 function checkProgression() {
   if (activeCharacters.length >= characters.length) return;
 
-  const streakNeeded = 15 + Math.floor(Math.sqrt(activeCharacters.length))
+  const streakNeeded = 15 + Math.floor(Math.sqrt(activeCharacters.length));
   if (streak >= streakNeeded) {
+    const remainingChars = characters.split('').filter(c => !activeCharacters.includes(c));
+    if (remainingChars.length > 0) {
       const newChar = remainingChars[0];
       activeCharacters.push(newChar);
       gameFeedback.textContent = `Great job! Added '${newChar.toUpperCase()}' to your set.`;
-      score.correct = 0;
-      score.total = 0;
+      streak = 0;
       saveProgress();
+    }
   }
 }

@@ -7,11 +7,12 @@
       width: 300px;
       padding: 10px;
       font-family: Helvetica, sans-serif;
-      background-color: #333; /* Dark gray background */
-      color: #DDD; /* Light gray text */
+      background-color: #333;
+      color: #DDD;
     }
     h3 {
-      color: #FFF; /* White for headings */
+      color: #FFF;
+      margin: 0 0 10px 0;
     }
     .color-picker {
       display: flex;
@@ -22,82 +23,109 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      color: #FFF; /* White labels for characters */
+      color: #FFF;
     }
     .color-picker input[type="color"] {
       width: 20px;
       height: 20px;
-      border: 1px solid #666; /* Light border for visibility */
+      border: 1px solid #666;
     }
     button {
       margin-top: 10px;
       width: 100%;
-      min-height: 30px;
+      min-height: 40px; /* Fixed height for consistency */
       padding: 10px;
-      background-color: #555; /* Darker button background */
-      color: #FFF; /* White text */
-      border: 1px solid #777; /* Light gray border */
+      background-color: #555;
+      color: #FFF;
+      border: 1px solid #777;
       cursor: pointer;
+      box-sizing: border-box; /* Include padding/border in height */
     }
     button:hover {
-      background-color: #666; /* Slightly lighter on hover */
+      background-color: #666;
     }
     #status, #dynamicStatus, #gameFeedback {
       margin-top: 10px;
       font-weight: bold;
       text-align: center;
+      min-height: 20px; /* Fixed height for feedback */
     }
     #status, #dynamicStatus {
-      color: #BBB; /* Slightly dimmed status text */
+      color: #BBB;
     }
     #gameFeedback {
-      color: #FFF; /* Default white, overridden by JS for green/red */
+      color: #FFF;
     }
     #hardcoreModeButton {
       margin-top: 10px;
       font-size: 20px;
       text-align: center;
       font-family: 'Helvetica';
-      background-color: #444; /* Slightly different button shade */
+      background-color: #444;
     }
     #gameContainer {
       display: none;
       text-align: center;
+      overflow: hidden; /* Prevent overflow */
+    }
+    #promptContainer {
+      height: 60px; /* Fixed space for prompt (character or color) */
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     #gameCharacter {
       font-size: 48px;
-      margin: 10px 0;
-      color: #FFF; /* White for large character */
+      margin: 0;
+      color: #FFF;
     }
     #gameColor {
       width: 50px;
       height: 50px;
-      margin: 10px auto;
-      border: 1px solid #999; /* Lighter border for dark theme */
+      margin: 0;
+      border: 1px solid #999;
     }
     #gameOptions {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 5px;
+      min-height: 80px; /* Fixed height for 2 rows of buttons */
+      margin-top: 10px;
     }
     #gameOptions button {
       width: 45%;
       padding: 5px;
-      background-color: #555; /* Match main buttons */
-      color: #FFF; /* White text (overrides JS black for dark theme) */
+      background-color: #555;
+      color: #FFF;
       border: 1px solid #777;
+      min-height: 30px; /* Fixed height */
+      box-sizing: border-box;
     }
     #gameOptions button:hover {
       background-color: #666;
     }
+    #gameOptions button:disabled {
+      background-color: #444; /* Dimmed when disabled */
+      cursor: not-allowed;
+    }
     #gameScore {
       margin-top: 10px;
       font-size: 14px;
-      color: #BBB; /* Dimmed score text */
+      color: #BBB;
+      min-height: 20px; /* Fixed height */
+    }
+    #gameControls {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     .hidden {
       display: none;
+    }
+    .invisible {
+      visibility: hidden;
     }
   </style>
 </head>
@@ -120,14 +148,18 @@
 
   <div id="gameContainer">
     <h3>Flashcard Game</h3>
-    <div id="gameCharacter" class="hidden"></div>
-    <div id="gameColor" class="hidden"></div>
+    <div id="promptContainer">
+      <div id="gameCharacter" class="hidden"></div>
+      <div id="gameColor" class="hidden"></div>
+    </div>
     <div id="gameOptions"></div>
     <div id="gameFeedback"></div>
     <div id="gameScore"></div>
-    <button id="nextCardButton" class="hidden">Next</button>
-    <button id="toggleModeButton">Switch Mode</button>
-    <button id="exitGameButton">Exit Game</button>
+    <div id="gameControls">
+      <button id="nextCardButton" class="invisible">Next</button>
+      <button id="toggleModeButton">Switch Mode</button>
+      <button id="exitGameButton">Exit Game</button>
+    </div>
   </div>
 
   <script src="popup.js"></script>
