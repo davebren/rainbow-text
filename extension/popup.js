@@ -21,6 +21,9 @@ const enableDynamicButton = document.getElementById('enableDynamicButton');
 const disableDynamicButton = document.getElementById('disableDynamicButton');
 const hardcoreModeButton = document.getElementById('hardcoreModeButton');
 const resetButton = document.getElementById('resetButton');
+const exportButton = document.getElementById('exportButton');
+const importButton = document.getElementById('importButton');
+const importFileInput = document.getElementById('importFileInput');
 const statusDiv = document.getElementById('status');
 const dynamicStatusDiv = document.getElementById('dynamicStatus');
 
@@ -59,9 +62,75 @@ function updateTitleColors() {
   titleText.split('').forEach(char => {
     const span = document.createElement('span');
     span.textContent = char;
-    span.style.color = isGameActive ? '#FFF' : (colorMap[char.toLowerCase()] || '#FFF'); // White in game, colorMap otherwise
+    span.style.color = isGameActive ? '#FFF' : (colorMap[char.toLowerCase()] || '#FFF');
     titleContainer.appendChild(span);
   });
+}
+
+function exportSettings() {
+  chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites'], (data) => {
+    const settings = {
+      colorMap: data.colorMap || colorMap,
+      enabledSites: data.enabledSites || enabledSites,
+      dynamicEnabledSites: data.dynamicEnabledSites || dynamicEnabledSites
+    };
+    const json = JSON.stringify(settings, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'rainbow-text-settings.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    statusDiv.textContent = 'Settings exported!';
+    setTimeout(() => statusDiv.textContent = '', 2000); // Clear after 2 seconds
+  });
+}
+
+function importSettings(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const settings = JSON.parse(e.target.result);
+      const { colorMap: importedColorMap, enabledSites: importedSites, dynamicEnabledSites: importedDynamicSites } = settings;
+
+      // Validate and apply settings
+      if (importedColorMap) colorMap = { ...defaultColorMap, ...importedColorMap };
+      if (Array.isArray(importedSites)) enabledSites = importedSites;
+      if (Array.isArray(importedDynamicSites)) dynamicEnabledSites = importedDynamicSites;
+
+      chrome.storage.sync.set({
+        colorMap,
+        enabledSites,
+        dynamicEnabledSites,
+      }, () => {
+        // Rebuild UI with imported settings
+        colorPickerContainer.innerHTML = '';
+        const vowels = ['a', 'e', 'i', 'o', 'u'];
+        const consonants = 'bcdfghjklmnpqrstvwxyz'.split('');
+        const numerals = '0123456789'.split('');
+        createColorPickerSection('Vowels', vowels);
+        createColorPickerSection('Consonants', consonants);
+        createColorPickerSection('Numerals', numerals);
+
+        updateTitleColors();
+        updateUI();
+        statusDiv.textContent = 'Settings imported!';
+        setTimeout(() => statusDiv.textContent = '', 2000); // Clear after 2 seconds
+      });
+    } catch (err) {
+      statusDiv.textContent = 'Error importing settings!';
+      console.error('Import failed:', err);
+      setTimeout(() => statusDiv.textContent = '', 2000);
+    }
+  };
+  reader.readAsText(file);
+  importFileInput.value = ''; // Reset input for reuse
 }
 
 // Load saved data and initialize UI
@@ -253,3 +322,11 @@ resetButton.addEventListener('click', () => {
     resetAll();
   }
 });
+
+exportButton.addEventListener('click', exportSettings);
+
+importButton.addEventListener('click', () => {
+  importFileInput.click(); // Trigger file input click
+});
+
+importFileInput.addEventListener('change', importSettings);
