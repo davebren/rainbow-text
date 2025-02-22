@@ -1,4 +1,3 @@
-
 {
     // 100 most common English words (frequency descending)
     const commonWords = [
@@ -12,6 +11,14 @@
         "because", "any", "these", "give", "day", "most", "us"
     ];
 
+    // Organize words by length
+    const wordsByLength = {};
+    commonWords.forEach(word => {
+        const len = word.length;
+        if (!wordsByLength[len]) wordsByLength[len] = [];
+        wordsByLength[len].push(word);
+    });
+
     // Block Game-specific DOM elements
     const mainControls = document.getElementById('mainControls');
     const startGameButton = document.getElementById('startBlockGameButton')
@@ -24,14 +31,14 @@
     const exitGameButton = document.getElementById('blockExitGameButton');
 
     // Block Game state
-    let learnedWords = [];
+    let activeWords = [];
     let wordStats = {};
     let wordStreak = 0;
     let currentWord = '';
     const blockWords = commonWords;
 
-    chrome.storage.sync.get(['learnedWords', 'wordStats', 'wordStreak'], (data) => {
-        learnedWords = data.learnedWords || [];
+    chrome.storage.sync.get(['activeWords', 'wordStats', 'wordStreak'], (data) => {
+        activeWords = data.activeWords || commonWords.slice(0, 5); // Start with first 5 words
         wordStats = data.wordStats || {};
         wordStreak = data.wordStreak || 0;
 
@@ -40,14 +47,14 @@
         });
     });
 
-    function saveProgress() {
-        chrome.storage.sync.set({ learnedWords, wordStats, wordStreak });
-    }
-
     startGameButton.addEventListener('click', () => {
         nextCard();
         updateScoreDisplay();
     });
+
+    function saveProgress() {
+        chrome.storage.sync.set({ activeWords, wordStats, wordStreak });
+    }
 
     exitGameButton.addEventListener('click', () => {
         saveProgress();
@@ -67,7 +74,7 @@
         characterPrompt.innerHTML = '';
         currentWord.split('').forEach(char => {
             const span = document.createElement('span');
-            span.textContent = '\u25A0';
+            span.textContent = '\u25A0'; // Unicode block character
             span.style.color = colorMap[char.toLowerCase()] || '#FFF';
             span.style.fontSize = '48px';
             characterPrompt.appendChild(span);
@@ -77,23 +84,62 @@
     }
 
     function selectNextWord() {
-        const unlearnedWords = blockWords.filter(word => !learnedWords.includes(word));
-        if (unlearnedWords.length > 0) {
-            return unlearnedWords[Math.floor(Math.random() * Math.min(5, unlearnedWords.length))]; // Bias towards first 5 unlearned
+        if (activeWords.length === commonWords.length) {
+            return activeWords[Math.floor(Math.random() * activeWords.length)];
         }
-        return blockWords[Math.floor(Math.random() * blockWords.length)]; // Fallback if all learned
+
+        // Bias towards recently unlocked words
+        let word = currentWord;
+        while (word === currentWord) {
+            if (Math.random() < 0.35 && activeWords.length > 3) {
+                const lastUnlockedWords = activeWords.slice(-3);
+                word = lastUnlockedWords[Math.floor(Math.random() * lastUnlockedWords.length)];
+            } else {
+                const restOfWords = activeWords.slice(0, Math.max(activeWords.length - 3, 0));
+                word = restOfWords[Math.floor(Math.random() * restOfWords.length)] || activeWords[0];
+            }
+        }
+        return word;
     }
 
     function generateWordOptions() {
         optionsContainer.innerHTML = '';
         const correctWord = currentWord;
+        const wordLength = correctWord.length;
+
+        // Get active words of the same length
+        const sameLengthActive = (wordsByLength[wordLength] || []).filter(word => activeWords.includes(word));
         let options = [correctWord];
-        while (options.length < 4) {
-            const randomWord = blockWords[Math.floor(Math.random() * blockWords.length)];
-            if (!options.includes(randomWord) && randomWord !== correctWord) {
+
+        // Try to fill options with same-length active words
+        while (options.length < 4 && sameLengthActive.length > options.length) {
+            const randomWord = sameLengthActive[Math.floor(Math.random() * sameLengthActive.length)];
+            if (!options.includes(randomWord)) {
                 options.push(randomWord);
             }
         }
+
+        // If not enough same-length options, fill with other active words
+        if (options.length < 4) {
+            const otherLengthActive = activeWords.filter(word => word !== correctWord && word.length !== wordLength);
+            while (options.length < 4 && otherLengthActive.length > 0) {
+                const randomWord = otherLengthActive[Math.floor(Math.random() * otherLengthActive.length)];
+                if (!options.includes(randomWord)) {
+                    options.push(randomWord);
+                } else {
+                    otherLengthActive.splice(otherLengthActive.indexOf(randomWord), 1); // Remove to avoid infinite loop
+                }
+            }
+        }
+
+        // Fallback to blockWords if still not enough options (rare case)
+        while (options.length < 4) {
+            const randomWord = blockWords[Math.floor(Math.random() * blockWords.length)];
+            if (!options.includes(randomWord)) {
+                options.push(randomWord);
+            }
+        }
+
         shuffle(options);
         options.forEach(word => {
             const button = document.createElement('button');
@@ -121,24 +167,28 @@
 
         Array.from(optionsContainer.children).forEach(button => button.disabled = true);
         saveProgress();
-        updateWordScoreDisplay();
+        updateScoreDisplay();
         nextCardButton.classList.remove('invisible');
     }
 
-    function updateWordScoreDisplay() {
-        const streakNeeded = 15 + Math.floor(Math.sqrt(learnedWords.length));
-        scoreText.textContent = `Streak: ${wordStreak} | Learned ${learnedWords.length}/${blockWords.length} | ${streakNeeded} streak needed`;
+    function updateScoreDisplay() {
+        const streakNeeded = 13 + Math.floor(Math.sqrt(activeWords.length));
+        scoreText.textContent = `Streak: ${wordStreak} | Learning ${activeWords.length}/${blockWords.length} | ${streakNeeded} streak needed`;
     }
 
     function checkWordProgression() {
-        if (learnedWords.length >= blockWords.length) return;
+        if (activeWords.length >= blockWords.length) return;
 
-        const streakNeeded = 15 + Math.floor(Math.sqrt(learnedWords.length));
-        if (wordStreak >= streakNeeded && !learnedWords.includes(currentWord)) {
-            learnedWords.push(currentWord);
-            feedbackText.textContent = `Great job! Learned "${currentWord}"!`;
-            wordStreak = 0;
-            saveProgress();
+        const streakNeeded = 15 + Math.floor(Math.sqrt(activeWords.length));
+        if (wordStreak >= streakNeeded) {
+            const remainingWords = blockWords.filter(word => !activeWords.includes(word));
+            if (remainingWords.length > 0) {
+                const newWord = remainingWords[0];
+                activeWords.push(newWord);
+                feedbackText.textContent = `Great job! Added "${newWord}" to your set!`;
+                wordStreak = 0;
+                saveProgress();
+            }
         }
     }
 

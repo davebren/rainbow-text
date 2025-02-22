@@ -75,7 +75,7 @@
 
     let char = previousChar;
     while (char === previousChar) {
-      if (Math.random() > 0.35) {
+      if (Math.random() < 0.35) {
         const lastUnlockedChars = activeCharacters.slice(-3);
         char = lastUnlockedChars[Math.floor(Math.random() * lastUnlockedChars.length)];
       } else {
