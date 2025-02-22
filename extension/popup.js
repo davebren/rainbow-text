@@ -1,15 +1,47 @@
 const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
-// Default color mappings (unchanged)
 const defaultColorMap = {
-  a: '#FFB6C1', e: '#77DD77', i: '#B19CD9', o: '#FFCC99', u: '#AEC6CF',
-  b: '#0000FF', c: '#00FFFF', d: '#FF8C00', f: '#FF00FF', g: '#39FF14',
-  h: '#FF69B4', j: '#00A86B', k: '#FFFF00', l: '#00FF00', m: '#FF00FF',
-  n: '#000080', p: '#800080', q: '#51484F', r: '#FF0000', s: '#FA8072',
-  t: '#40E0D0', v: '#8F00FF', w: '#F5DEB3', x: '#EEED09', y: '#FFFF00',
-  z: '#0014A8', 0: '#000000', 1: '#FFFFFF', 2: '#FF0000', 3: '#39FF14',
-  4: '#0000FF', 5: '#FFFF00', 6: '#FF00FF', 7: '#00FFFF', 8: '#FF8C00',
-  9: '#800080'
+  // Vowels (Pastels)
+  a: '#F2CCE6', // Soft Mauve (HSL: 320, 60%, 90%) – Reddish-purple
+  e: '#CCE6CC', // Pale Mint (HSL: 120, 40%, 85%) – Greenish
+  i: '#D9CCFF', // Light Lavender (HSL: 260, 100%, 90%) – Purplish
+  o: '#FFE6CC', // Peach Glow (HSL: 30, 100%, 90%) – Orangish
+  u: '#CCE6F2', // Baby Blue (HSL: 200, 60%, 90%) – Bluish
+
+  // Consonants (Neon-ish: adjusted y, k)
+  b: '#6699FF', // Lighter Neon Blue (HSL: 225, 100%, 70%)
+  c: '#00FFFF', // Neon Cyan (HSL: 180, 100%, 50%)
+  d: '#FF6600', // Neon Orange (HSL: 20, 100%, 50%)
+  f: '#FF00CC', // Neon Fuchsia (HSL: 312, 100%, 50%)
+  g: '#33FF33', // Neon Green (HSL: 120, 100%, 60%)
+  h: '#FF3399', // Neon Hot Pink (HSL: 330, 100%, 60%)
+  j: '#00CC66', // Neon Jade (HSL: 150, 100%, 40%)
+  k: '#CCB300', // Darker Neon Yellow (HSL: 50, 100%, 45%) – Was 60%
+  l: '#00FF66', // Neon Lime (HSL: 140, 100%, 50%)
+  m: '#CC00FF', // Neon Magenta (HSL: 288, 100%, 50%)
+  n: '#3399FF', // Lighter Neon Navy (HSL: 210, 100%, 60%)
+  p: '#9900FF', // Neon Purple (HSL: 270, 100%, 50%)
+  q: '#FF3399', // Lighter Neon Red-Pink (HSL: 340, 100%, 60%)
+  r: '#FF3333', // Neon Red (HSL: 0, 100%, 60%)
+  s: '#FF9966', // Neon Salmon (HSL: 20, 100%, 70%)
+  t: '#00FFCC', // Neon Turquoise (HSL: 168, 100%, 50%)
+  v: '#CC33FF', // Neon Violet (HSL: 282, 100%, 60%)
+  w: '#FFCC33', // Neon Amber (HSL: 45, 100%, 60%)
+  x: '#CCFF33', // Neon Chartreuse (HSL: 75, 100%, 60%)
+  y: '#FFFF00', // Darker Neon Yellow (HSL: 60, 100%, 50%) – Was 70%
+  z: '#6699FF', // Much Lighter Neon Blue (HSL: 225, 100%, 75%)
+
+  // Numbers (Neon-ish: adjusted 5)
+  0: '#808080', // Slightly Lighter Gray (HSL: 0, 0%, 50%)
+  1: '#B3B3B3', // Slightly Darker Light Gray (HSL: 0, 0%, 70%)
+  2: '#FF3333', // Neon Red (HSL: 0, 100%, 60%)
+  3: '#33CC33', // Neon Forest Green (HSL: 120, 60%, 50%)
+  4: '#6699FF', // Lighter Neon Royal Blue (HSL: 225, 100%, 70%)
+  5: '#CC9900', // Darker Neon Gold (HSL: 45, 100%, 40%) – Was 50%
+  6: '#FF00FF', // Neon Pure Magenta (HSL: 300, 100%, 50%)
+  7: '#00CCCC', // Neon Teal (HSL: 180, 100%, 40%)
+  8: '#FF9900', // Neon Tangerine (HSL: 36, 100%, 50%)
+  9: '#7F33FF', // Slightly Lighter Neon Indigo (HSL: 260, 100%, 60%)
 };
 
 // DOM Elements
