@@ -74,7 +74,7 @@
     button:hover {
       background-color: #666;
     }
-    #status, #dynamicStatus, #gameFeedback {
+    #status, #dynamicStatus, #gameFeedback, #blockGameFeedback {
       margin-top: 10px;
       font-weight: bold;
       text-align: center;
@@ -88,7 +88,7 @@
     #dynamicStatus {
       color: #BBB;
     }
-    #gameFeedback {
+    #gameFeedback, #blockGameFeedback {
       color: #FFF;
     }
     #hardcoreModeButton {
@@ -98,18 +98,18 @@
       font-family: 'Helvetica';
       background-color: #444;
     }
-    #gameContainer {
+    #gameContainer, #blockGameContainer {
       display: none;
       text-align: center;
       overflow: hidden;
     }
-    #promptContainer {
+    #promptContainer, #blockPromptContainer {
       height: 60px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-    #gameCharacter {
+    #gameCharacter, #blockGameCharacter {
       font-size: 48px;
       margin: 0;
       color: #FFF;
@@ -120,7 +120,7 @@
       margin: 0;
       border: 1px solid #999;
     }
-    #gameOptions {
+    #gameOptions, #blockGameOptions {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -128,7 +128,7 @@
       min-height: 80px;
       margin-top: 10px;
     }
-    #gameOptions button {
+    #gameOptions button, #blockGameOptions button {
       width: 45%;
       padding: 5px;
       background-color: #555;
@@ -137,20 +137,20 @@
       min-height: 30px;
       box-sizing: border-box;
     }
-    #gameOptions button:hover {
+    #gameOptions button:hover, #blockGameOptions button:hover {
       background-color: #666;
     }
-    #gameOptions button:disabled {
+    #gameOptions button:disabled, #blockGameOptions button:disabled {
       background-color: #444;
       cursor: not-allowed;
     }
-    #gameScore {
+    #gameScore, #blockGameScore {
       margin-top: 10px;
       font-size: 14px;
       color: #BBB;
       min-height: 20px;
     }
-    #gameControls {
+    #gameControls, #blockGameControls {
       margin-top: 10px;
       display: flex;
       flex-direction: column;
@@ -206,7 +206,22 @@
     </div>
   </div>
 
+  <div id="blockGameContainer">
+    <h3>Block Word Game</h3>
+    <div id="blockPromptContainer">
+      <div id="blockGameCharacter" class="hidden"></div>
+    </div>
+    <div id="blockGameOptions"></div>
+    <div id="blockGameFeedback"></div>
+    <div id="blockGameScore"></div>
+    <div id="blockGameControls">
+      <button id="blockNextCardButton" class="invisible">Next</button>
+      <button id="blockExitGameButton">Exit Game</button>
+    </div>
+  </div>
+
   <script src="popup.js"></script>
-  <script src="game.js"></script>
+  <script src="charColorGame.js"></script>
+  <script src="blockGame.js"></script>
 </body>
 </html>
