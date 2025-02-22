@@ -16,13 +16,12 @@ let activeCharacters = [];
 let charStats = {};
 let currentChar = '';
 let isCharToColorMode = true;
-let score = { correct: 0, total: 0 };
+let streak = 0;
 
 // Load game state from storage
-chrome.storage.sync.get(['activeCharacters', 'charStats', 'score'], (data) => {
+chrome.storage.sync.get(['activeCharacters', 'charStats'], (data) => {
   activeCharacters = data.activeCharacters || characters.split('').slice(0, 5);
   charStats = data.charStats || {};
-  score = data.score || { correct: 0, total: 0 };
 
   // Initialize charStats for any missing characters
   characters.split('').forEach(char => {
@@ -32,7 +31,7 @@ chrome.storage.sync.get(['activeCharacters', 'charStats', 'score'], (data) => {
 
 // Save game progress
 function saveProgress() {
-  chrome.storage.sync.set({ activeCharacters, charStats, score });
+  chrome.storage.sync.set({ activeCharacters, charStats });
 }
 
 // Game event listeners
@@ -118,7 +117,7 @@ function generateCharOptions() {
   const correctChar = currentChar;
   let options = [correctChar];
   while (options.length < 4) {
-    const randomChar = characters[Math.floor(Math.random() * characters.length)];
+    const randomChar = activeCharacters[Math.floor(Math.random() * activeCharacters.length)];
     if (!options.includes(randomChar) && randomChar !== correctChar) {
       options.push(randomChar);
     }
@@ -140,15 +139,16 @@ function shuffle(array) {
 }
 
 function checkAnswer(selected, correct, isColorMode) {
-  score.total++;
   charStats[currentChar].total++;
   const isCorrect = selected === correct;
+
   if (isCorrect) {
-    score.correct++;
+    streak++;
     charStats[currentChar].correct++;
     gameFeedback.textContent = 'Correct!';
     gameFeedback.style.color = '#00FF00';
   } else {
+    streak = 0;
     gameFeedback.textContent = isColorMode
       ? `Wrong! The correct color is ${correct}.`
       : `Wrong! The correct character is ${correct.toUpperCase()}.`;
@@ -172,25 +172,20 @@ function checkAnswer(selected, correct, isColorMode) {
 }
 
 function updateScoreDisplay() {
-  const percentage = score.total > 0 ? ((score.correct / score.total) * 100).toFixed(1) : 0;
-  const attemptsNeeded = 10 + (activeCharacters.length - 5) * 5;
-  gameScore.textContent = `Score: ${score.correct}/${score.total} (${percentage}%) | Learning ${activeCharacters.length}/${characters.length} (Next: ${attemptsNeeded} attempts)`;
+  const streakNeeded = 15 + Math.floor(Math.sqrt(activeCharacters.length))
+  gameScore.textContent = `Streak: ${streak} | Learning ${activeCharacters.length}/${characters.length} | ${streakNeeded} streak needed`;
 }
 
 function checkProgression() {
-  const attemptsNeeded = 10 + (activeCharacters.length - 5) * 5;
-  if (score.total >= attemptsNeeded && activeCharacters.length < characters.length) {
-    const percentage = (score.correct / score.total) * 100;
-    if (percentage >= 80) {
-      const remainingChars = characters.split('').filter(c => !activeCharacters.includes(c));
-      if (remainingChars.length > 0) {
-        const newChar = remainingChars[0];
-        activeCharacters.push(newChar);
-        gameFeedback.textContent = `Great job! Added '${newChar.toUpperCase()}' to your set.`;
-        score.correct = 0;
-        score.total = 0;
-        saveProgress();
-      }
-    }
+  if (activeCharacters.length >= characters.length) return;
+
+  const streakNeeded = 15 + Math.floor(Math.sqrt(activeCharacters.length))
+  if (streak >= streakNeeded) {
+      const newChar = remainingChars[0];
+      activeCharacters.push(newChar);
+      gameFeedback.textContent = `Great job! Added '${newChar.toUpperCase()}' to your set.`;
+      score.correct = 0;
+      score.total = 0;
+      saveProgress();
   }
 }
