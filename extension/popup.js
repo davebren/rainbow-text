@@ -24,6 +24,8 @@ const resetButton = document.getElementById('resetButton');
 const exportButton = document.getElementById('exportButton');
 const importButton = document.getElementById('importButton');
 const importFileInput = document.getElementById('importFileInput');
+const startGameButton = document.getElementById('startGameButton');
+const startBlockGameButton = document.getElementById('startBlockGameButton');
 const statusDiv = document.getElementById('status');
 const dynamicStatusDiv = document.getElementById('dynamicStatus');
 
@@ -68,11 +70,17 @@ function updateTitleColors() {
 }
 
 function exportSettings() {
-  chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites'], (data) => {
+  chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites', 'activeCharacters', 'charStats', 'streak', 'learnedWords', 'wordStats', 'wordStreak'], (data) => {
     const settings = {
       colorMap: data.colorMap || colorMap,
       enabledSites: data.enabledSites || enabledSites,
-      dynamicEnabledSites: data.dynamicEnabledSites || dynamicEnabledSites
+      dynamicEnabledSites: data.dynamicEnabledSites || dynamicEnabledSites,
+      activeCharacters: data.activeCharacters || [],
+      charStats: data.charStats || {},
+      streak: data.streak || 0,
+      learnedWords: data.learnedWords || [],
+      wordStats: data.wordStats || {},
+      wordStreak: data.wordStreak || 0
     };
     const json = JSON.stringify(settings, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -85,7 +93,7 @@ function exportSettings() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     statusDiv.textContent = 'Settings exported!';
-    setTimeout(() => statusDiv.textContent = '', 2000); // Clear after 2 seconds
+    setTimeout(() => statusDiv.textContent = '', 2000);
   });
 }
 
@@ -97,9 +105,18 @@ function importSettings(event) {
   reader.onload = (e) => {
     try {
       const settings = JSON.parse(e.target.result);
-      const { colorMap: importedColorMap, enabledSites: importedSites, dynamicEnabledSites: importedDynamicSites } = settings;
+      const { 
+        colorMap: importedColorMap, 
+        enabledSites: importedSites, 
+        dynamicEnabledSites: importedDynamicSites, 
+        activeCharacters, 
+        charStats, 
+        streak,
+        learnedWords,
+        wordStats,
+        wordStreak
+      } = settings;
 
-      // Validate and apply settings
       if (importedColorMap) colorMap = { ...defaultColorMap, ...importedColorMap };
       if (Array.isArray(importedSites)) enabledSites = importedSites;
       if (Array.isArray(importedDynamicSites)) dynamicEnabledSites = importedDynamicSites;
@@ -108,8 +125,13 @@ function importSettings(event) {
         colorMap,
         enabledSites,
         dynamicEnabledSites,
+        activeCharacters: Array.isArray(activeCharacters) ? activeCharacters : [],
+        charStats: typeof charStats === 'object' ? charStats : {},
+        streak: typeof streak === 'number' ? streak : 0,
+        learnedWords: Array.isArray(learnedWords) ? learnedWords : [],
+        wordStats: typeof wordStats === 'object' ? wordStats : {},
+        wordStreak: typeof wordStreak === 'number' ? wordStreak : 0
       }, () => {
-        // Rebuild UI with imported settings
         colorPickerContainer.innerHTML = '';
         const vowels = ['a', 'e', 'i', 'o', 'u'];
         const consonants = 'bcdfghjklmnpqrstvwxyz'.split('');
@@ -121,7 +143,7 @@ function importSettings(event) {
         updateTitleColors();
         updateUI();
         statusDiv.textContent = 'Settings imported!';
-        setTimeout(() => statusDiv.textContent = '', 2000); // Clear after 2 seconds
+        setTimeout(() => statusDiv.textContent = '', 2000);
       });
     } catch (err) {
       statusDiv.textContent = 'Error importing settings!';
@@ -130,7 +152,7 @@ function importSettings(event) {
     }
   };
   reader.readAsText(file);
-  importFileInput.value = ''; // Reset input for reuse
+  importFileInput.value = '';
 }
 
 // Load saved data and initialize UI
@@ -326,7 +348,23 @@ resetButton.addEventListener('click', () => {
 exportButton.addEventListener('click', exportSettings);
 
 importButton.addEventListener('click', () => {
-  importFileInput.click(); // Trigger file input click
+  importFileInput.click();
 });
 
 importFileInput.addEventListener('change', importSettings);
+
+startGameButton.addEventListener('click', () => {
+  startGame('flashcard');
+});
+
+startBlockGameButton.addEventListener('click', () => {
+  startGame('blockword');
+});
+
+function startGame(mode) {
+  window.gameMode = mode; // Set global game mode for game.js
+  mainControls.style.display = 'none';
+  gameContainer.style.display = 'block';
+  isGameActive = true;
+  updateTitleColors();
+}
