@@ -11,19 +11,19 @@ const exitGameButton = document.getElementById('exitGameButton');
 const mainControls = document.getElementById('mainControls');
 const startGameButton = document.getElementById('startGameButton');
 
-// Game state.
+// Game state
 let activeCharacters = [];
 let charStats = {};
 let currentChar = '';
 let isCharToColorMode = true;
 let streak = 0;
 
+// Load game state from storage
 chrome.storage.sync.get(['activeCharacters', 'charStats', 'streak'], (data) => {
   activeCharacters = data.activeCharacters || characters.split('').slice(0, 5);
   charStats = data.charStats || {};
   streak = data.streak || 0;
 
-  // Initialize charStats for any missing characters
   characters.split('').forEach(char => {
     if (!charStats[char]) charStats[char] = { correct: 0, total: 0 };
   });
@@ -37,6 +37,8 @@ function saveProgress() {
 startGameButton.addEventListener('click', () => {
   mainControls.style.display = 'none';
   gameContainer.style.display = 'block';
+  isGameActive = true;
+  updateTitleColors();
   updateScoreDisplay();
   nextCard();
 });
@@ -51,6 +53,8 @@ exitGameButton.addEventListener('click', () => {
   saveProgress();
   gameContainer.style.display = 'none';
   mainControls.style.display = 'block';
+  isGameActive = false;
+  updateTitleColors();
 });
 
 nextCardButton.addEventListener('click', nextCard);
@@ -62,7 +66,7 @@ function nextCard() {
 
   if (isCharToColorMode) {
     gameCharacter.textContent = currentChar.toUpperCase();
-    gameCharacter.style.color = '#FFF'; // Reset to white initially
+    gameCharacter.style.color = '#FFF';
     gameCharacter.classList.remove('hidden');
     gameColor.classList.add('hidden');
     generateColorOptions();

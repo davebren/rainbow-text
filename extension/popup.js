@@ -27,6 +27,7 @@ const dynamicStatusDiv = document.getElementById('dynamicStatus');
 let colorMap = {};
 let enabledSites = [];
 let dynamicEnabledSites = [];
+let isGameActive = false;
 
 function createColorPickerSection(title, chars) {
   const header = document.createElement('h4');
@@ -44,7 +45,7 @@ function createColorPickerSection(title, chars) {
     colorInput.addEventListener('input', () => {
       colorMap[char] = colorInput.value;
       chrome.storage.sync.set({ colorMap });
-      updateTitleColors(); // Update title on color change
+      updateTitleColors();
     });
     label.appendChild(colorInput);
     group.appendChild(label);
@@ -58,7 +59,7 @@ function updateTitleColors() {
   titleText.split('').forEach(char => {
     const span = document.createElement('span');
     span.textContent = char;
-    span.style.color = colorMap[char.toLowerCase()] || '#FFF'; // Use colorMap or white for hyphen
+    span.style.color = isGameActive ? '#FFF' : (colorMap[char.toLowerCase()] || '#FFF'); // White in game, colorMap otherwise
     titleContainer.appendChild(span);
   });
 }
