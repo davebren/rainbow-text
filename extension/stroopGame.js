@@ -2,7 +2,7 @@
     // Stroop Game-specific DOM elements
     const mainControls = document.getElementById('mainControls');
     const container = document.getElementById('stroopGameContainer');
-    const startGameButton = document.getElementById('startStroopGameButton')
+    const startGameButton = document.getElementById('startStroopGameButton');
     const wordPrompt = document.getElementById('stroopGameWord');
     const noButton = document.getElementById('stroopNoButton');
     const yesButton = document.getElementById('stroopYesButton');
@@ -139,23 +139,26 @@
         });
     }
 
+    function flashBackground(isCorrect) {
+        const originalColor = container.style.backgroundColor || '#333';
+        container.style.backgroundColor = isCorrect ? '#00FF00' : '#FF3333';
+        setTimeout(() => {
+            container.style.backgroundColor = originalColor;
+        }, 200); // Flash for 200ms
+    }
+
     function checkAnswer(userSaysMatching) {
         const isCorrect = (userSaysMatching === isMatching);
         if (isCorrect) {
             correctAnswers++;
-            feedbackText.textContent = 'Correct!';
-            feedbackText.style.color = '#00FF00';
-            setTimeout(nextWord, 500); // Move to next word after short delay
+            flashBackground(true);
         } else {
             incorrectAnswers++;
-            feedbackText.textContent = 'Wrong!';
-            feedbackText.style.color = '#FF3333';
+            flashBackground(false);
             showCorrectColors();
-            noButton.disabled = true;
-            yesButton.disabled = true;
-            setTimeout(nextWord, 1000); // Longer delay to show correction
         }
         updateScoreDisplay();
+        nextWord(); // Move to next word immediately
     }
 
     function updateScoreDisplay() {
