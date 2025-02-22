@@ -27,12 +27,7 @@
       width: 100%;
       padding: 10px;
     }
-    #status {
-      margin-top: 10px;
-      font-weight: bold;
-      text-align: center;
-    }
-    #dynamicStatus {
+    #status, #dynamicStatus, #gameFeedback {
       margin-top: 10px;
       font-weight: bold;
       text-align: center;
@@ -43,21 +38,66 @@
       text-align: center;
       font-family: 'Helvetica';
     }
+    #gameContainer {
+      display: none;
+      text-align: center;
+    }
+    #gameCharacter {
+      font-size: 48px;
+      margin: 10px 0;
+    }
+    #gameColor {
+      width: 50px;
+      height: 50px;
+      margin: 10px auto;
+      border: 1px solid #000;
+    }
+    #gameOptions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+    }
+    #gameOptions button {
+      width: 45%;
+      padding: 5px;
+    }
+    #gameScore {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <h3>Character Color Changer</h3>
-  <div class="color-picker" id="colorPicker"></div>
-  <button id="enableButton">Enable for This Site</button>
-  <button id="disableButton">Disable for This Site</button>
-  <button id="applyButton">Apply Changes</button>
-  <button id="enableDynamicButton">Enable Dynamic Content</button>
-  <button id="disableDynamicButton">Disable Dynamic Content</button>
-  <button id="hardcoreModeButton">HARDCORE MODE</button>
-  <!-- <div id="hardcoreModeButton"></div> -->
+  
+  <div id="mainControls">
+    <div class="color-picker" id="colorPicker"></div>
+    <button id="enableButton">Enable for This Site</button>
+    <button id="disableButton">Disable for This Site</button>
+    <button id="applyButton">Apply Changes</button>
+    <button id="enableDynamicButton">Enable Dynamic Content</button>
+    <button id="disableDynamicButton">Disable Dynamic Content</button>
+    <button id="hardcoreModeButton">HARDCORE MODE</button>
+    <button id="startGameButton">Start Flashcard Game</button>
+    <div id="status"></div>
+    <div id="dynamicStatus"></div>
+  </div>
 
-  <div id="status"></div>
-  <div id="dynamicStatus"></div>
+  <div id="gameContainer">
+    <h3>Flashcard Game</h3>
+    <div id="gameCharacter" class="hidden"></div>
+    <div id="gameColor" class="hidden"></div>
+    <div id="gameOptions"></div>
+    <div id="gameFeedback"></div>
+    <div id="gameScore"></div>
+    <button id="nextCardButton" class="hidden">Next</button>
+    <button id="toggleModeButton">Switch Mode</button>
+    <button id="exitGameButton">Exit Game</button>
+  </div>
 
   <script src="popup.js"></script>
 </body>
