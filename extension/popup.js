@@ -53,6 +53,9 @@ const enableDynamicButton = document.getElementById('enableDynamicButton');
 const disableDynamicButton = document.getElementById('disableDynamicButton');
 const hardcoreModeButton = document.getElementById('hardcoreModeButton');
 const startGameButton = document.getElementById('startGameButton');
+const statusDiv = document.getElementById('status');
+const dynamicStatusDiv = document.getElementById('dynamicStatus')
+
 const gameContainer = document.getElementById('gameContainer');
 const gameCharacter = document.getElementById('gameCharacter');
 const gameColor = document.getElementById('gameColor');
@@ -104,12 +107,10 @@ chrome.storage.sync.get(['colorMap', 'enabledSites', 'dynamicEnabledSites', 'act
   updateUI();
 });
 
-// Save progress
 function saveProgress() {
   chrome.storage.sync.set({ activeCharacters, charStats, score });
 }
 
-// Existing UI update function (unchanged)
 function updateUI() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = new URL(tabs[0].url);
@@ -141,7 +142,6 @@ function updateUI() {
   });
 }
 
-// Existing setHardcoreModeText function (unchanged)
 function setHardcoreModeText() {
   hardcoreModeButton.textContent = '';
   hardcoreModeButton.innerHTML = '';
