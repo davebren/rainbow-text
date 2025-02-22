@@ -166,7 +166,7 @@
   function checkProgression() {
     if (activeCharacters.length >= characters.length) return;
 
-    const streakNeeded = 15 + Math.floor(Math.sqrt(activeCharacters.length));
+    const streakNeeded = 10
     if (streak >= streakNeeded) {
       const remainingChars = characters.split('').filter(c => !activeCharacters.includes(c));
       if (remainingChars.length > 0) {

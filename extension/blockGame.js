@@ -179,7 +179,7 @@
     function checkWordProgression() {
         if (activeWords.length >= blockWords.length) return;
 
-        const streakNeeded = 15 + Math.floor(Math.sqrt(activeWords.length));
+        const streakNeeded = 10
         if (wordStreak >= streakNeeded) {
             const remainingWords = blockWords.filter(word => !activeWords.includes(word));
             if (remainingWords.length > 0) {
