@@ -58,7 +58,7 @@ exitGameButton.addEventListener('click', () => {
 nextCardButton.addEventListener('click', nextCard);
 
 function nextCard() {
-  currentChar = biasedRandomChar();
+  currentChar = biasedRandomChar(currentChar);
   gameOptions.innerHTML = '';
   gameFeedback.textContent = '';
   nextCardButton.classList.add('hidden');
@@ -76,13 +76,22 @@ function nextCard() {
   }
 }
 
-function biasedRandomChar() {
+function biasedRandomChar(previousChar) {
   if (activeCharacters.length === characters.length) {
     return activeCharacters[Math.floor(Math.random() * activeCharacters.length)];
   }
-  const biasThreshold = Math.max(1, Math.floor(activeCharacters.length * 0.25));
-  const recentChars = activeCharacters.slice(-biasThreshold);
-  return Math.random() < 0.7 ? recentChars[Math.floor(Math.random() * recentChars.length)] : activeCharacters[Math.floor(Math.random() * activeCharacters.length)];
+
+  let char = previousChar;
+  while (char === previousChar) {
+    if (Math.random() > .35) {
+      const lastUnlockedChars = activeCharacters.slice(-3);
+      char = lastUnlockedChars[Math.floor(Math.random() * lastUnlockedChars.length)];
+    } else {
+      const restOfChars = activeCharacters.slice(activeCharacters.length - 3);
+      char = restOfChars[Math.floor(Math.random() * restOfChars.length)];
+    }
+  }
+  return char;
 }
 
 function generateColorOptions() {
@@ -166,7 +175,7 @@ function checkProgression() {
       if (remainingChars.length > 0) {
         const newChar = remainingChars[0];
         activeCharacters.push(newChar);
-        gameFeedback.textContent = `Great job! Added '${newChar.toUpperCase()}' to your set.`;
+        gameFeedback.textContent = `Great job! Added '${newChar.toUpperCase()}' to your learning set.`;
         score.correct = 0;
         score.total = 0;
         saveProgress();
