@@ -25,7 +25,7 @@ let activeBlockGameWords = [];
 
     // Block Game-specific DOM elements
     const mainControls = document.getElementById('mainControls');
-    const startGameButton = document.getElementById('startBlockGameButton')
+    const startGameButton = document.getElementById('startBlockGameButton');
     const container = document.getElementById('blockGameContainer');
     const characterPrompt = document.getElementById('blockGameCharacter');
     const optionsContainer = document.getElementById('blockGameOptions');
@@ -40,23 +40,29 @@ let activeBlockGameWords = [];
     let currentWord = '';
     const blockWords = commonWords;
 
-    chrome.storage.sync.get(['activeWords', 'wordStats', 'wordStreak'], (data) => {
-        activeBlockGameWords = data.activeWords || commonWords.slice(0, 5); // Start with first 5 words
+    chrome.storage.sync.get(['activeBlockGameWords', 'wordStats', 'wordStreak'], (data) => {
+        activeBlockGameWords = data.activeBlockGameWords || commonWords.slice(0, 5); // Use consistent key
         wordStats = data.wordStats || {};
         wordStreak = data.wordStreak || 0;
 
         commonWords.forEach(word => {
             if (!wordStats[word]) wordStats[word] = { correct: 0, total: 0 };
         });
-    });
 
-    startGameButton.addEventListener('click', () => {
-        nextCard();
-        updateScoreDisplay();
+        startGameButton.addEventListener('click', () => {
+            nextCard();
+            updateScoreDisplay();
+        });
     });
 
     function saveProgress() {
-        chrome.storage.sync.set({ activeBlockGameWords, wordStats, wordStreak });
+        chrome.storage.sync.set({ activeBlockGameWords, wordStats, wordStreak }, (result) => {
+            if (chrome.runtime.lastError) {
+                console.error('Storage save failed:', chrome.runtime.lastError);
+            } else {
+                console.log('Progress saved successfully');
+            }
+        });
     }
 
     exitGameButton.addEventListener('click', () => {
@@ -182,7 +188,7 @@ let activeBlockGameWords = [];
     function checkWordProgression() {
         if (activeBlockGameWords.length >= blockWords.length) return;
 
-        const streakNeeded = 10
+        const streakNeeded = 10;
         if (wordStreak >= streakNeeded) {
             const remainingWords = blockWords.filter(word => !activeBlockGameWords.includes(word));
             if (remainingWords.length > 0) {
