@@ -4,12 +4,12 @@ let isGameActive = false;
 {
 
   const defaultColorMap = {
-    a: '#F2CCE6', e: '#CCE6CC', i: '#D9CCFF', o: '#FFE6CC', u: '#CCE6F2',
-    b: '#6699FF', c: '#00FFFF', d: '#FF6600', f: '#FF00CC', g: '#33FF33',
-    h: '#FF3399', j: '#00CC66', k: '#CCB300', l: '#00FF66', m: '#CC00FF',
-    n: '#3399FF', p: '#9900FF', q: '#FF3399', r: '#FF3333', s: '#FF9966',
-    t: '#00FFCC', v: '#CC33FF', w: '#FFCC33', x: '#CCFF33', y: '#FFFF00',
-    z: '#6699FF', 0: '#808080', 1: '#B3B3B3', 2: '#FF3333', 3: '#33CC33',
+    a: '#FFA3E2', e: '#A9E5A9', i: '#BAA3FF', o: '#FFCB94', u: '#90D8F9',
+    b: '#6699FF', c: '#00EBEB', d: '#FF6600', f: '#FF00CC', g: '#33FF33',
+    h: '#DD2782', j: '#00CC66', k: '#CCB300', l: '#FF6B6B', m: '#CC00FF',
+    n: '#37B1B3', p: '#9900FF', q: '#2BAB8B', r: '#FF0000', s: '#FDA77C',
+    t: '#00FFCC', v: '#D557FF', w: '#FFCC33', x: '#B2DF2A', y: '#FFFF00',
+    z: '#7898D9', 0: '#808080', 1: '#B3B3B3', 2: '#FF3333', 3: '#33CC33',
     4: '#6699FF', 5: '#CC9900', 6: '#FF00FF', 7: '#00CCCC', 8: '#FF9900',
     9: '#7F33FF'
   };
