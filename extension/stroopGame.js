@@ -6,7 +6,6 @@
     const wordPrompt = document.getElementById('stroopGameWord');
     const noButton = document.getElementById('stroopNoButton');
     const yesButton = document.getElementById('stroopYesButton');
-    const feedbackText = document.getElementById('stroopGameFeedback');
     const scoreText = document.getElementById('stroopGameScore');
     const exitGameButton = document.getElementById('stroopExitGameButton');
     const stroopTitle = container.querySelector('h3'); // Target the "Stroop Game" title
@@ -57,7 +56,6 @@
 
     function endGame() {
         clearInterval(timer);
-        feedbackText.textContent = `Game Over! Final Score: ${correctAnswers - incorrectAnswers}`;
         noButton.disabled = true;
         yesButton.disabled = true;
         document.removeEventListener('keydown', handleKeyPress);
@@ -99,7 +97,6 @@
         currentWord = selectNextWord();
         isMatching = Math.random() < 0.5; // 50% chance of matching colors
         applyWordColors();
-        feedbackText.textContent = '';
         noButton.disabled = false;
         yesButton.disabled = false;
     }
