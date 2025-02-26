@@ -34,6 +34,8 @@ let activeBlockGameWords = [];
     const nextCardButton = document.getElementById('blockNextCardButton');
     const exitGameButton = document.getElementById('blockExitGameButton');
 
+    const streakNeeded = 10;
+
     // Block Game state
     let wordStats = {};
     let wordStreak = 0;
@@ -181,14 +183,12 @@ let activeBlockGameWords = [];
     }
 
     function updateScoreDisplay() {
-        const streakNeeded = 13 + Math.floor(Math.sqrt(activeBlockGameWords.length));
         scoreText.textContent = `Streak: ${wordStreak} | Learning ${activeBlockGameWords.length}/${blockWords.length} | ${streakNeeded} streak needed`;
     }
 
     function checkWordProgression() {
         if (activeBlockGameWords.length >= blockWords.length) return;
 
-        const streakNeeded = 10;
         if (wordStreak >= streakNeeded) {
             const remainingWords = blockWords.filter(word => !activeBlockGameWords.includes(word));
             if (remainingWords.length > 0) {

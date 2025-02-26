@@ -13,6 +13,8 @@
   const toggleModeButton = document.getElementById('toggleModeButton');
   const exitGameButton = document.getElementById('exitGameButton');
 
+  const streakNeeded = 10;
+
   // Game state
   let activeCharacters = [];
   let charStats = {};
@@ -159,14 +161,12 @@
   }
 
   function updateScoreDisplay() {
-    const streakNeeded = 13 + Math.floor(Math.sqrt(activeCharacters.length));
     scoreText.textContent = `Streak: ${streak} | Learning ${activeCharacters.length}/${characters.length} | ${streakNeeded} streak needed`;
   }
 
   function checkProgression() {
     if (activeCharacters.length >= characters.length) return;
 
-    const streakNeeded = 10
     if (streak >= streakNeeded) {
       const remainingChars = characters.split('').filter(c => !activeCharacters.includes(c));
       if (remainingChars.length > 0) {
