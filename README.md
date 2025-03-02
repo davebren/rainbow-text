@@ -6,4 +6,5 @@ Next tasks:
 - Add defaults for common symbol characters.
 - Use a taller block glyph for the hardcore mode capital letters.
 - If working well enough across all sites, add an option to turn it on for all sites with blacklisting.
-- Add a stroop task game.
+- Add more words to games
+- Add underline to links
