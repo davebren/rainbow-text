@@ -382,7 +382,9 @@ let activeBlockGameWords = [];
             const userInput = wordInput.value.trim().toLowerCase();
 
             // Show feedback and automatically move to next card after a delay
-            checkWordAnswer(userInput, currentWord, true);
+            if (userInput !== "") {
+                checkWordAnswer(userInput, currentWord, true);
+            }
         } else if (event.key === 'Enter' && isTypingMode) {
             // If next button is visible, we've already answered and can go to next card
             if (feedbackTimeout) {
