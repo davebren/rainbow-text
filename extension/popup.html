@@ -180,6 +180,44 @@
       margin-top: 10px; /* Ensure margin is applied */
       display: block; /* Ensure the label behaves as a block element for margin to work */
     }
+    #blockInputContainer {
+      margin-top: 10px;
+      width: 100%;
+    }
+    #blockWordInput {
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      background-color: #444;
+      color: #FFF;
+      border: 1px solid #777;
+    }
+
+    #blockSubmitButton {
+      width: 100%;
+      padding: 8px;
+      background-color: #555;
+      color: #FFF;
+      border: 1px solid #777;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    #blockSubmitButton:hover {
+      background-color: #666;
+    }
+
+    #blockToggleModeButton {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    #blockWordInput:disabled, #blockSubmitButton:disabled {
+      background-color: #333;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>

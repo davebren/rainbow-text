@@ -1,5 +1,3 @@
-
-
 let activeBlockGameWords = [];
 
 {
@@ -121,12 +119,47 @@ let activeBlockGameWords = [];
     const nextCardButton = document.getElementById('blockNextCardButton');
     const exitGameButton = document.getElementById('blockExitGameButton');
 
+    // New elements for typing mode
+    const toggleModeButton = document.createElement('button');
+    toggleModeButton.id = 'blockToggleModeButton';
+    toggleModeButton.textContent = 'Switch to Typing Mode';
+
+    const inputContainer = document.createElement('div');
+    inputContainer.id = 'blockInputContainer';
+    inputContainer.style.marginTop = '10px';
+
+    const wordInput = document.createElement('input');
+    wordInput.id = 'blockWordInput';
+    wordInput.type = 'text';
+    wordInput.placeholder = 'Type the word here...';
+    wordInput.style.padding = '8px';
+    wordInput.style.width = '100%';
+    wordInput.style.boxSizing = 'border-box';
+    wordInput.style.marginBottom = '10px';
+
+    const submitButton = document.createElement('button');
+    submitButton.id = 'blockSubmitButton';
+    submitButton.textContent = 'Submit';
+    submitButton.style.width = '100%';
+
+    inputContainer.appendChild(wordInput);
+    inputContainer.appendChild(submitButton);
+
+    // Add elements to the controls
+    document.getElementById('blockGameControls').insertBefore(
+        toggleModeButton,
+        document.getElementById('blockExitGameButton')
+    );
+    container.insertBefore(inputContainer, feedbackText);
+    inputContainer.style.display = 'none';
+
     const streakNeeded = 10;
 
     // Block Game state
     let wordStreak = 0;
     let currentWord = '';
     const blockWords = wordsList;
+    let isTypingMode = false;
 
     chrome.storage.sync.get(['activeBlockGameWords', 'wordStreak'], (data) => {
         activeBlockGameWords = data.activeBlockGameWords || wordsList.slice(0, 5); // Use consistent key
@@ -162,6 +195,7 @@ let activeBlockGameWords = [];
         currentWord = selectNextWord();
         feedbackText.textContent = '';
         nextCardButton.classList.add('invisible');
+        wordInput.value = ''; // Clear input field
 
         characterPrompt.innerHTML = '';
         currentWord.split('').forEach(char => {
@@ -172,7 +206,16 @@ let activeBlockGameWords = [];
             characterPrompt.appendChild(span);
         });
         characterPrompt.classList.remove('hidden');
-        generateWordOptions();
+
+        if (isTypingMode) {
+            optionsContainer.style.display = 'none';
+            inputContainer.style.display = 'block';
+            wordInput.focus();
+        } else {
+            optionsContainer.style.display = 'block';
+            inputContainer.style.display = 'none';
+            generateWordOptions();
+        }
     }
 
     function selectNextWord() {
@@ -255,7 +298,13 @@ let activeBlockGameWords = [];
             feedbackText.style.color = '#FF3333';
         }
 
-        Array.from(optionsContainer.children).forEach(button => button.disabled = true);
+        if (!isTypingMode) {
+            Array.from(optionsContainer.children).forEach(button => button.disabled = true);
+        } else {
+            wordInput.disabled = true;
+            submitButton.disabled = true;
+        }
+
         saveProgress();
         updateScoreDisplay();
         nextCardButton.classList.remove('invisible');
@@ -286,4 +335,25 @@ let activeBlockGameWords = [];
             [array[i], array[j]] = [array[j], array[i]];
         }
     }
+
+    // Toggle button event listener
+    toggleModeButton.addEventListener('click', () => {
+        isTypingMode = !isTypingMode;
+        toggleModeButton.textContent = isTypingMode ? 'Switch to Multiple Choice' : 'Switch to Typing Mode';
+        nextCard();
+    });
+
+    // Submit button event listener
+    submitButton.addEventListener('click', () => {
+        const userInput = wordInput.value.trim().toLowerCase();
+        checkWordAnswer(userInput, currentWord);
+    });
+
+    // Enter key for submission
+    wordInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            const userInput = wordInput.value.trim().toLowerCase();
+            checkWordAnswer(userInput, currentWord);
+        }
+    });
 }
