@@ -154,6 +154,7 @@ let activeBlockGameWords = [];
     inputContainer.style.display = 'none';
 
     const streakNeeded = 10;
+    const correctFeedbackDuration = 600
 
     // Block Game state
     let wordStreak = 0;
@@ -293,7 +294,7 @@ let activeBlockGameWords = [];
         });
     }
 
-    function checkWordAnswer(selected, correct) {
+    function checkWordAnswer(selected, correct, autoAdvance = false) {
         const isCorrect = selected === correct;
 
         if (isCorrect) {
@@ -317,6 +318,19 @@ let activeBlockGameWords = [];
         saveProgress();
         updateScoreDisplay();
         nextCardButton.classList.remove('invisible');
+
+        // If auto-advance is enabled, move to the next card after showing feedback
+        if (autoAdvance && isTypingMode && isCorrect) {
+            if (feedbackTimeout) {
+                clearTimeout(feedbackTimeout);
+            }
+
+            feedbackTimeout = setTimeout(() => {
+                resetGameState();
+                nextCard();
+                feedbackTimeout = null;
+            }, correctFeedbackDuration);
+        }
     }
 
     function updateScoreDisplay() {
@@ -355,30 +369,46 @@ let activeBlockGameWords = [];
     // Submit button event listener
     submitButton.addEventListener('click', () => {
         const userInput = wordInput.value.trim().toLowerCase();
-        checkWordAnswer(userInput, currentWord);
+        checkWordAnswer(userInput, currentWord, true);
     });
+
+    // Variables to track feedback timing
+    let feedbackTimeout = null;
 
     // Enter key for submission or to show next card
     wordInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            if (nextCardButton.classList.contains('invisible')) {
-                // If next button is invisible, we're expecting an answer
-                const userInput = wordInput.value.trim().toLowerCase();
-                checkWordAnswer(userInput, currentWord);
-            } else {
-                // If next button is visible, we've already answered and can go to next card
-                resetGameState();
-                nextCard();
-            }
-        }
-    });
+        if (event.key === 'Enter' && !isFullyVisible(nextCardButton) && isTypingMode) {
+            // If next button is invisible, we're expecting an answer
+            const userInput = wordInput.value.trim().toLowerCase();
 
-    // Add keyboard event listener for the document
-    document.addEventListener('keydown', (event) => {
-        // Only trigger if Enter is pressed and nextCardButton is visible (after answering)
-        if (event.key === 'Enter' && !nextCardButton.classList.contains('invisible') && isTypingMode) {
+            // Show feedback and automatically move to next card after a delay
+            checkWordAnswer(userInput, currentWord, true);
+        } else if (event.key === 'Enter' && isTypingMode) {
+            // If next button is visible, we've already answered and can go to next card
+            if (feedbackTimeout) {
+                clearTimeout(feedbackTimeout);
+            }
             resetGameState();
             nextCard();
         }
     });
+
+    function isFullyVisible(elem, tolerance = 0.5) {
+        const rect = elem.getBoundingClientRect();
+        const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+        const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+        // Check with tolerance for being within the viewport
+        const inViewVertically = rect.top <= windowHeight + tolerance && rect.bottom >= -tolerance;
+        const inViewHorizontally = rect.left <= windowWidth + tolerance && rect.right >= -tolerance;
+        const inViewport = inViewVertically && inViewHorizontally;
+
+        // Check for CSS visibility, 'hidden' attribute, and dimensions
+        const style = getComputedStyle(elem);
+        const notHiddenByCSS = style.display !== 'none' && style.visibility !== 'hidden' && parseFloat(style.opacity) > 0;
+        const notHiddenAttribute = !elem.hidden;
+        const hasDimensions = elem.offsetWidth > 0 || elem.offsetHeight > 0 || elem.getClientRects().length > 0;
+
+        return inViewport && notHiddenByCSS && notHiddenAttribute && hasDimensions;
+    }
 }
