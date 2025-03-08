@@ -189,7 +189,16 @@ let activeBlockGameWords = [];
         updateTitleColors();
     });
 
-    nextCardButton.addEventListener('click', nextCard);
+    nextCardButton.addEventListener('click', () => {
+        resetGameState();
+        nextCard();
+    });
+
+    // Reset game state for next word
+    function resetGameState() {
+        wordInput.disabled = false;
+        submitButton.disabled = false;
+    }
 
     function nextCard() {
         currentWord = selectNextWord();
@@ -349,11 +358,27 @@ let activeBlockGameWords = [];
         checkWordAnswer(userInput, currentWord);
     });
 
-    // Enter key for submission
+    // Enter key for submission or to show next card
     wordInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
-            const userInput = wordInput.value.trim().toLowerCase();
-            checkWordAnswer(userInput, currentWord);
+            if (nextCardButton.classList.contains('invisible')) {
+                // If next button is invisible, we're expecting an answer
+                const userInput = wordInput.value.trim().toLowerCase();
+                checkWordAnswer(userInput, currentWord);
+            } else {
+                // If next button is visible, we've already answered and can go to next card
+                resetGameState();
+                nextCard();
+            }
+        }
+    });
+
+    // Add keyboard event listener for the document
+    document.addEventListener('keydown', (event) => {
+        // Only trigger if Enter is pressed and nextCardButton is visible (after answering)
+        if (event.key === 'Enter' && !nextCardButton.classList.contains('invisible') && isTypingMode) {
+            resetGameState();
+            nextCard();
         }
     });
 }
