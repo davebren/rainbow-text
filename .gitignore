@@ -1,2 +1,4 @@
 
 **/.DS_STORE
+/genScripts/build/
+/genScripts/.gradle/

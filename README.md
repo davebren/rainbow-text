@@ -20,3 +20,5 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC4235407/
 - Add underline to links
 - Add setting to disable numbers
 - Adjust default number colors
+- Button to configure dark background for sites.
+- Add type-in mode for block word game
