@@ -295,7 +295,7 @@ let activeBlockGameWords = [];
     }
 
     function checkWordAnswer(selected, correct, autoAdvance = false) {
-        const isCorrect = selected === correct;
+        const isCorrect = selected.toLowerCase() === correct.toLowerCase();
 
         if (isCorrect) {
             wordStreak++;
