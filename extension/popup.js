@@ -16,7 +16,7 @@ let isGameActive = false;
 
   // DOM Elements
   const titleContainer = document.getElementById('title');
-  const donateButton = document.getElementById('donateButton')
+  const donateButton = document.getElementById('donateButton');
   const colorPickerContainer = document.getElementById('colorPicker');
   const enableButton = document.getElementById('enableButton');
   const disableButton = document.getElementById('disableButton');
@@ -73,6 +73,21 @@ let isGameActive = false;
       span.textContent = char;
       span.style.color = isGameActive ? '#FFF' : (colorMap[char.toLowerCase()] || '#FFF');
       titleContainer.appendChild(span);
+    });
+
+    updateDonateButtonColors();
+  }
+
+  function updateDonateButtonColors() {
+    const donateButtonElement = donateButton.querySelector('button');
+    donateButtonElement.innerHTML = '';
+    const donateText = 'Support the Creator';
+
+    donateText.split('').forEach(char => {
+      const span = document.createElement('span');
+      span.textContent = char;
+      span.style.color = isGameActive ? '#FFF' : (colorMap[char.toLowerCase()] || '#FFF');
+      donateButtonElement.appendChild(span);
     });
   }
 
