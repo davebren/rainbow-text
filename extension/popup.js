@@ -16,6 +16,7 @@ let isGameActive = false;
 
   // DOM Elements
   const titleContainer = document.getElementById('title');
+  const donateButton = document.getElementById('donateButton')
   const colorPickerContainer = document.getElementById('colorPicker');
   const enableButton = document.getElementById('enableButton');
   const disableButton = document.getElementById('disableButton');
