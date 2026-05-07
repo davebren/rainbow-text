@@ -13,8 +13,8 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC4235407/
 [![ScreenShot](https://raw.github.com/davebren/rainbow-text/main/screenshots/youtubeDemo.png)](https://www.youtube.com/watch?v=8cKzdQ8tn7c)
 
 ### Next tasks:
+- Dynamic hardcore mode
 - Add defaults for common symbol characters.
-- Use a taller block glyph for the hardcore mode capital letters.
 - If working well enough across all sites, add an option to turn it on for all sites with blacklisting.
 - Add more words to games
 - Add underline to links
