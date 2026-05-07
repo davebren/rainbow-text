@@ -71,12 +71,48 @@ function applyCharacterColors(colorMap, dynamicEnabled, blockModeEnabled) {
 
       characters.forEach(char => {
         // Check if the character is a letter (A-Z, case-insensitive) or a numeral (0-9)
-        if (/[A-Za-z0-9]/.test(char)) {
+        if (/[A-Za-zÀ-ÖØ-öø-ÿ]/.test(char)) {
           // Create a <span> element and add the appropriate class
           const spanElement = document.createElement('span');
-          spanElement.classList.add(`char-color-${char.toLowerCase()}`);
+          const lowercaseChar = char.toLowerCase();
+
+          let unaccentedChar = lowercaseChar;
+            if (lowercaseChar === 'á' || lowercaseChar == 'ä') { unaccentedChar = 'a'; } 
+            else if (lowercaseChar === 'é' || lowercaseChar === 'ë') { unaccentedChar = 'e'; }
+            else if (lowercaseChar === 'ó' || lowercaseChar === 'ö') { unaccentedChar = 'o'; }
+            else if (lowercaseChar === 'í' || lowercaseChar === 'ï') { unaccentedChar = 'i'; }
+            else if (lowercaseChar === 'ú' || lowercaseChar === 'ü') { unaccentedChar = 'u'; }
+            else if (lowercaseChar === 'ñ') { unaccentedChar = 'n'; }
+
+
+          spanElement.classList.add(`char-color-${unaccentedChar}`);
+
           if (blockModeEnabled) {
-            spanElement.textContent = '■'
+            if (lowercaseChar === 'á' || lowercaseChar === 'é' || lowercaseChar === 'ó' || lowercaseChar === 'í' || lowercaseChar === 'ú') {
+              if (lowercaseChar === char) {
+                spanElement.textContent = '◕';
+              } else {
+                spanElement.textContent = '◪';  
+              }
+            } else if (lowercaseChar === 'ñ') { 
+              if (lowercaseChar === char) {
+                spanElement.textContent = '⊜';
+              } else {
+                spanElement.textContent = '▤';  
+              }
+            } else if (lowercaseChar == 'ä' || lowercaseChar === 'ë' || lowercaseChar === 'ö' || lowercaseChar === 'ï' || lowercaseChar === 'ü') {
+              if (lowercaseChar === char) {
+                spanElement.textContent = '◍';
+              } else {
+                spanElement.textContent = '▥';  
+              }
+            } else {
+              if (lowercaseChar === char) {
+                spanElement.textContent = '●';
+              } else {
+                spanElement.textContent = '■';  
+              }
+            }
           } else {
             spanElement.textContent = char;
           }
@@ -148,11 +184,15 @@ function applyCharacterColors(colorMap, dynamicEnabled, blockModeEnabled) {
 // Function to convert text to block symbols
 function convertToBlockSymbols(node) {
   if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== "") {
+    console.log(node.textContent.split(''))
+
     // Replace each character with the block symbol (■)
     const blockText = node.textContent
       .split('')
       .map(char => {
-        if (char === ' ') {
+        if (char === 'á' || char === 'é' || char === 'í' || char === 'ó' || char === 'ú') {
+          return '◪';
+        } else if (char === ' ') {
           // Preserve spaces
           return ' ';
         } else if (char === '\n') {
